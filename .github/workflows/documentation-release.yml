@@ -75,13 +75,13 @@ jobs:
           tlmgr install tcolorbox pgf etoolbox environ trimspaces
       - name: Fetch Eisvogel Pandoc Template
         run: |
-          curl https://github.com/Wandmalfarbe/pandoc-latex-template/blob/master/eisvogel.tex > eisvogel.tex
+          curl https://github.com/Wandmalfarbe/pandoc-latex-template/blob/master/eisvogel.tex > eisvogel.latex
       - name: Build Documentation Files
         run: |
-          pandoc "docs/src/documentation.md" -o "docs/dist/documentation.pdf" --from markdown --template "./eisvogel.tex" --listings
-          pandoc "docs/src/specification.md" -o "docs/dist/specification.pdf" --from markdown --template "./eisvogel.tex" --listings
-          pandoc "docs/src/testing.md" -o "docs/dist/testing.pdf" --from markdown --template "./eisvogel.tex" --listings
-          pandoc "docs/src/whitepaper.md" -o "docs/dist/whitepaper.pdf" --from markdown --template "./eisvogel.tex" --listings
+          pandoc "docs/src/documentation.md" -o "docs/dist/documentation.pdf" --from markdown --template "./eisvogel.latex" --listings
+          pandoc "docs/src/specification.md" -o "docs/dist/specification.pdf" --from markdown --template "./eisvogel.latex" --listings
+          pandoc "docs/src/testing.md" -o "docs/dist/testing.pdf" --from markdown --template "./eisvogel.latex" --listings
+          pandoc "docs/src/whitepaper.md" -o "docs/dist/whitepaper.pdf" --from markdown --template "./eisvogel.latex" --listings
       - name: Upload Generated Documentation Files
         uses: actions/upload-artifact@v4
         with:
