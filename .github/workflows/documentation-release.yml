@@ -82,12 +82,10 @@ jobs:
           sudo chown -hR $(whoami) "$EISVOGEL_INSTALL"
           curl -sSL https://github.com/Wandmalfarbe/pandoc-latex-template/releases/download/2.4.2/Eisvogel.tar.gz | sudo tar xzf - -C $EISVOGEL_INSTALL
           mkdir -p ${PANDOC_DIR}/templates
-          ls -la "$PANDOC_DIR"
-          ls -la "$PANDOC_DIR/templates"
           mv "$EISVOGEL_INSTALL/eisvogel.latex" "$PANDOC_DIR/templates"
       - name: Build Documentation Files
         run: |
-          pandoc --version
+          pandoc "docs/src/documentation.md" -o "docs/dist/documentation.pdf" --from markdown --template eisvogel --listings
       - name: Upload Generated Documentation Files
         uses: actions/upload-artifact@v4
         with:
