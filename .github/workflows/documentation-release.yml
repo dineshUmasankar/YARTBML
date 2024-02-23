@@ -78,6 +78,7 @@ jobs:
           EISVOGEL_INSTALL: '/tmp/eisvogel'
         run: |
           mkdir -p ${EISVOGEL_INSTALL}
+          sudo chown -hR $(whoami) "$EISVOGEL_INSTALL"
           wget https://github.com/Wandmalfarbe/pandoc-latex-template/releases/download/2.4.2/Eisvogel-2.4.2.tar.gz | sudo tar xzf -C ${EISVOGEL_INSTALL}
           ls -la ${EISVOGEL_INSTALL}
       # - name: Build Documentation Files
