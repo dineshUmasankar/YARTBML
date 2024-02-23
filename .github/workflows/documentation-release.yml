@@ -81,9 +81,10 @@ jobs:
           mkdir -p ${EISVOGEL_INSTALL}
           sudo chown -hR $(whoami) "$EISVOGEL_INSTALL"
           curl -sSL https://github.com/Wandmalfarbe/pandoc-latex-template/releases/download/2.4.2/Eisvogel.tar.gz | sudo tar xzf - -C $EISVOGEL_INSTALL
-          mv "$EISVOGEL_INSTALL/eisvogel.latex" "$PANDOC_DIR/templates"
+          mkdir -p ${PANDOC_DIR}/templates
           ls -la "$PANDOC_DIR"
           ls -la "$PANDOC_DIR/templates"
+          mv "$EISVOGEL_INSTALL/eisvogel.latex" "$PANDOC_DIR/templates"
       - name: Build Documentation Files
         run: |
           pandoc --version
