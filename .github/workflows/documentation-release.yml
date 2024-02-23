@@ -23,68 +23,69 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup pandoc
+      # - uses: actions/checkout@v4
+      #   with:
+      #     fetch-depth: 0
+      # - name: Setup pandoc
+      #   env:
+      #     PANDOC_VERSION: "3.1.9"
+      #   run: |
+      #     wget -qO- https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz | sudo tar xzf - --strip-components 1 -C /usr/local/
+      # - name: Fetch TexLive Profile
+      #   run: |
+      #     curl https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/.texlife.profile > .texlife.profile
+      # - name: Setup TexLive
+      #   env:
+      #     REMOTE: http://mirror.ctan.org/systems/texlive/tlnet
+      #     INSTALL: '/tmp/install-texlive'
+      #   run: |
+      #     mkdir -p ${INSTALL}
+      #     curl -sSL ${REMOTE}/install-tl-unx.tar.gz | tar -xzv -C $INSTALL --strip-components=1
+      #     sudo ${INSTALL}/install-tl --no-gui --profile .texlife.profile
+      #     VERSION=$($INSTALL/install-tl --version | grep 'version' | grep -o '[0-9]\{4\}')
+      #     PLATFORM=$($INSTALL/install-tl --print-platform)
+      #     TEXLIVE_DIR="/usr/local/texlive/${VERSION}"
+      #     TEXBIN="/usr/local/texlive/${VERSION}/bin/${PLATFORM}"
+      #     echo "${TEXBIN}" >> $GITHUB_PATH
+      #     sudo chown -hR $(whoami) "$TEXLIVE_DIR"
+      # - name: Initialization for tlmgr
+      #   run: |
+      #     sudo apt-get update -qq && sudo apt-get install xzdec -y
+      #     tlmgr init-usertree
+      # - name: Setup fonts and image convertion tool
+      #   run: sudo apt-get update -qq && sudo apt-get install fonts-noto-cjk poppler-utils -y    
+      # - name: Setup Python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.12'
+      # - name: Install Python Filters
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install pandoc-latex-environment
+      # - name: Install LaTeX packages
+      #   run: |
+      #     tlmgr install adjustbox background bidi csquotes footmisc footnotebackref fvextra mdframed pagecolor sourcecodepro sourcesanspro titling ulem upquote xurl hardwrap catchfile
+      #     # trial and error
+      #     tlmgr install letltxmacro zref everypage framed collectbox
+      #     # packages needed for the template
+      #     tlmgr install xecjk filehook unicode-math ucharcat pagecolor babel-german ly1 mweights sourcecodepro sourcesanspro mdframed needspace fvextra footmisc footnotebackref background
+      #     # packages only needed for some examples (that include packages via header-includes)
+      #     tlmgr install awesomebox fontawesome5
+      #     # packages only needed for some examples (example boxes-with-pandoc-latex-environment-and-tcolorbox)
+      #     tlmgr install tcolorbox pgf etoolbox environ trimspaces
+      - name: Download Latest Eisvogel Template
         env:
-          PANDOC_VERSION: "3.1.7"
+          EISVOGEL_INSTALL: '/tmp/eisvogel'
         run: |
-          wget -qO- https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz | sudo tar xzf - --strip-components 1 -C /usr/local/
-      - name: Fetch TexLive Profile
-        run: |
-          curl https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/.texlife.profile > .texlife.profile
-      - name: Setup TexLive
-        env:
-          REMOTE: http://mirror.ctan.org/systems/texlive/tlnet
-          INSTALL: '/tmp/install-texlive'
-        run: |
-          mkdir -p ${INSTALL}
-          curl -sSL ${REMOTE}/install-tl-unx.tar.gz | tar -xzv -C $INSTALL --strip-components=1
-          sudo ${INSTALL}/install-tl --no-gui --profile .texlife.profile
-          VERSION=$($INSTALL/install-tl --version | grep 'version' | grep -o '[0-9]\{4\}')
-          PLATFORM=$($INSTALL/install-tl --print-platform)
-          TEXLIVE_DIR="/usr/local/texlive/${VERSION}"
-          TEXBIN="/usr/local/texlive/${VERSION}/bin/${PLATFORM}"
-          echo "${TEXBIN}" >> $GITHUB_PATH
-          sudo chown -hR $(whoami) "$TEXLIVE_DIR"
-      - name: Initialization for tlmgr
-        run: |
-          sudo apt-get update -qq && sudo apt-get install xzdec -y
-          tlmgr init-usertree
-      - name: Setup fonts and image convertion tool
-        run: sudo apt-get update -qq && sudo apt-get install fonts-noto-cjk poppler-utils -y    
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Install Python Filters
-        run: |
-          python -m pip install --upgrade pip
-          pip install pandoc-latex-environment
-      - name: Install LaTeX packages
-        run: |
-          tlmgr install adjustbox background bidi csquotes footmisc footnotebackref fvextra mdframed pagecolor sourcecodepro sourcesanspro titling ulem upquote xurl hardwrap catchfile
-          # trial and error
-          tlmgr install letltxmacro zref everypage framed collectbox
-          # packages needed for the template
-          tlmgr install xecjk filehook unicode-math ucharcat pagecolor babel-german ly1 mweights sourcecodepro sourcesanspro mdframed needspace fvextra footmisc footnotebackref background
-          # packages only needed for some examples (that include packages via header-includes)
-          tlmgr install awesomebox fontawesome5
-          # packages only needed for some examples (example boxes-with-pandoc-latex-environment-and-tcolorbox)
-          tlmgr install tcolorbox pgf etoolbox environ trimspaces
-      - name: Fetch Eisvogel Pandoc Template
-        run: |
-          curl https://github.com/Wandmalfarbe/pandoc-latex-template/blob/master/eisvogel.tex > eisvogel.latex
-      - name: Build Documentation Files
-        run: |
-          pandoc "docs/src/documentation.md" -o "docs/dist/documentation.pdf" --from markdown --template "./eisvogel.latex" --listings
-          pandoc "docs/src/specification.md" -o "docs/dist/specification.pdf" --from markdown --template "./eisvogel.latex" --listings
-          pandoc "docs/src/testing.md" -o "docs/dist/testing.pdf" --from markdown --template "./eisvogel.latex" --listings
-          pandoc "docs/src/whitepaper.md" -o "docs/dist/whitepaper.pdf" --from markdown --template "./eisvogel.latex" --listings
-      - name: Upload Generated Documentation Files
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-files
-          path: |
-            docs/dist/*
+          mkdir -p ${EISVOGEL_INSTALL}
+          wget https://github.com/Wandmalfarbe/pandoc-latex-template/releases/download/2.4.2/Eisvogel-2.4.2.tar.gz | sudo tar xzf -C ${EISVOGEL_INSTALL}
+          ls -la ${EISVOGEL_INSTALL}
+      # - name: Build Documentation Files
+      #   run: |
+      #     pandoc --version
+      # - name: Upload Generated Documentation Files
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: build-files
+      #     path: |
+      #       docs/dist/*
