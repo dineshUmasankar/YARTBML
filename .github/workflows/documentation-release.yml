@@ -10,14 +10,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  gen_docs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      - name: Install pandoc
+      - name: Install Pandoc
         env:
           PANDOC_VERSION: "3.1.9"
         run: wget -qO- https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz | sudo tar xzf - --strip-components 1 -C /usr/local/
@@ -40,12 +39,12 @@ jobs:
           echo "${TEXBIN}" >> $GITHUB_PATH
           sudo chown -hR $(whoami) "$TEXLIVE_DIR"
       
-      - name: Initialization for tlmgr
+      - name: Initialization for tlmgr for TexLive Plugin System
         run: |
           sudo apt-get update -qq && sudo apt-get install xzdec -y
           tlmgr init-usertree
       
-      - name: Setup fonts and image convertion tool
+      - name: Setup Fonts & Image Conversion Utilities
         run: sudo apt-get update -qq && sudo apt-get install fonts-noto-cjk poppler-utils -y    
       
       - name: Setup Python
@@ -56,7 +55,7 @@ jobs:
       - name: Install Pandoc-Python Filters
         run: pip install pandoc-latex-environment
       
-      - name: Install LaTeX packages
+      - name: Install LaTeX Packages
         run: |
           tlmgr install adjustbox background bidi csquotes footmisc footnotebackref fvextra mdframed pagecolor sourcecodepro sourcesanspro titling ulem upquote xurl hardwrap catchfile
           # trial and error
@@ -90,5 +89,5 @@ jobs:
       - name: Upload Generated Documentation Files
         uses: actions/upload-artifact@v4
         with:
-          name: build-files
+          name: docs
           path: docs/dist/*
