@@ -18,19 +18,29 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
-      - name: Fetch Markdown Files From Docs
-        id: docs_list
-        run: |
-          mkdir output
-          cd docs/src
-          files=$(printf "docs/src/%s " *.md)
-          echo "files=$files" > $GITHUB_OUTPUT
 
-      - name: Generate Documentation
+      - name: Create Docs Distributable Folder
+        run: mkdir output
+      
+      - name: Generate PDF for Documentation
         uses: docker://pandoc/extra:latest
         with:
-          args: --output=output/result.pdf ${{ steps.docs_list.outputs.files }}
+          args: docs/src/documentation.md -o output/documentation.pdf --template eisvogel --listings
+
+      - name: Generate PDF for Specification
+        uses: docker://pandoc/extra:latest
+        with:
+          args: docs/src/specification.md -o output/specification.pdf --template eisvogel --listings
+
+      - name: Generate PDF for Testing
+        uses: docker://pandoc/extra:latest
+        with:
+          args: docs/src/testing.md -o output/testing.pdf --template eisvogel --listings
+
+      - name: Generate PDF for Whitepaper
+        uses: docker://pandoc/extra:latest
+        with:
+          args: docs/src/whitepaper.md -o output/whitepaper.pdf --template eisvogel --listings
       
       - name: Upload Generated Documentation Files
         uses: actions/upload-artifact@v4
