@@ -22,6 +22,7 @@ jobs:
       - name: Fetch Markdown Files From Docs
         id: docs_list
         run: |
+          mkdir output
           cd docs/src
           files=$(printf "docs/src/%s " *.md)
           echo "files=$files" > $GITHUB_OUTPUT
@@ -29,10 +30,10 @@ jobs:
       - name: Generate Documentation
         uses: docker://pandoc/extra:latest
         with:
-          args: --output=docs/dist/result.pdf ${{ steps.docs_list.outputs.files }}
+          args: --output=output/result.pdf ${{ steps.docs_list.outputs.files }}
       
       - name: Upload Generated Documentation Files
         uses: actions/upload-artifact@v4
         with:
           name: docs
-          path: docs
+          path: output
