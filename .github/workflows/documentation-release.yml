@@ -29,7 +29,7 @@ jobs:
       - name: Generate Documentation
         uses: docker://pandoc/extra:latest
         with:
-          args: --output=docs/dist/result.pdf ${{ steps.docs_list.outputs.files }} --template eisvogel --listings
+          args: --output=docs/dist/result.pdf ${{ steps.docs_list.outputs.files }}
       
       - name: Upload Generated Documentation Files
         uses: actions/upload-artifact@v4
