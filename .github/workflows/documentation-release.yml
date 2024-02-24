@@ -14,36 +14,81 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repostiory
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
 
-      - name: Create Docs Distributable Folder
-        run: mkdir output
+      - name: Install pandoc
+        env:
+          PANDOC_VERSION: "3.1.9"
+        run: wget -qO- https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz | sudo tar xzf - --strip-components 1 -C /usr/local/
       
-      - name: Generate PDF for Documentation
-        uses: docker://pandoc/extra:latest
-        with:
-          args: docs/src/documentation.md -o output/documentation.pdf --template eisvogel --listings
-
-      - name: Generate PDF for Specification
-        uses: docker://pandoc/extra:latest
-        with:
-          args: docs/src/specification.md -o output/specification.pdf --template eisvogel --listings
-
-      - name: Generate PDF for Testing
-        uses: docker://pandoc/extra:latest
-        with:
-          args: docs/src/testing.md -o output/testing.pdf --template eisvogel --listings
-
-      - name: Generate PDF for Whitepaper
-        uses: docker://pandoc/extra:latest
-        with:
-          args: docs/src/whitepaper.md -o output/whitepaper.pdf --template eisvogel --listings
+      - name: Fetch TexLive Profile
+        run: curl https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/.texlife.profile > .texlife.profile
       
+      - name: Install TexLive
+        env:
+          REMOTE: http://mirror.ctan.org/systems/texlive/tlnet
+          INSTALL: '/tmp/install-texlive'
+        run: |
+          mkdir -p ${INSTALL}
+          curl -sSL ${REMOTE}/install-tl-unx.tar.gz | tar -xzv -C $INSTALL --strip-components=1
+          sudo ${INSTALL}/install-tl --no-gui --profile .texlife.profile
+          VERSION=$($INSTALL/install-tl --version | grep 'version' | grep -o '[0-9]\{4\}')
+          PLATFORM=$($INSTALL/install-tl --print-platform)
+          TEXLIVE_DIR="/usr/local/texlive/${VERSION}"
+          TEXBIN="/usr/local/texlive/${VERSION}/bin/${PLATFORM}"
+          echo "${TEXBIN}" >> $GITHUB_PATH
+          sudo chown -hR $(whoami) "$TEXLIVE_DIR"
+      
+      - name: Initialization for tlmgr
+        run: |
+          sudo apt-get update -qq && sudo apt-get install xzdec -y
+          tlmgr init-usertree
+      
+      - name: Setup fonts and image convertion tool
+        run: sudo apt-get update -qq && sudo apt-get install fonts-noto-cjk poppler-utils -y    
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install Pandoc-Python Filters
+        run: pip install pandoc-latex-environment
+      
+      - name: Install LaTeX packages
+        run: |
+          tlmgr install adjustbox background bidi csquotes footmisc footnotebackref fvextra mdframed pagecolor sourcecodepro sourcesanspro titling ulem upquote xurl hardwrap catchfile
+          # trial and error
+          tlmgr install letltxmacro zref everypage framed collectbox
+          # packages needed for the template
+          tlmgr install xecjk filehook unicode-math ucharcat pagecolor babel-german ly1 mweights sourcecodepro sourcesanspro mdframed needspace fvextra footmisc footnotebackref background
+          # packages only needed for some examples (that include packages via header-includes)
+          tlmgr install awesomebox fontawesome5
+          # packages only needed for some examples (example boxes-with-pandoc-latex-environment-and-tcolorbox)
+          tlmgr install tcolorbox pgf etoolbox environ trimspaces
+      
+      - name: Download Latest Eisvogel Template
+        env:
+          TEMPLATES_DIR: 'templates'
+          EISVOGEL_REPO: https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template
+          EISVOGEL_VERSION: v2.4.0
+        run: |
+          mkdir -p ${TEMPLATES_DIR}
+          sudo chown -hR $(whoami) "$TEMPLATES_DIR"
+          wget ${EISVOGEL_REPO}/${EISVOGEL_VERSION}/eisvogel.tex -O ${TEMPLATES_DIR}/eisvogel.latex
+
+      - name: Build Documentation Files
+        run: |
+          rm -rf docs/dist
+          mkdir -p docs/dist
+          pandoc docs/src/documentation.md -o docs/dist/documentation.pdf --template "templates/eisvogel.latex" --listings
+          pandoc docs/src/specification.md -o docs/dist/specification.pdf --template "templates/eisvogel.latex" --listings
+          pandoc docs/src/testing.md -o docs/dist/testing.pdf --template "templates/eisvogel.latex" --listings
+          pandoc docs/src/whitepaper.md -o docs/dist/whitepaper.pdf --template "templates/eisvogel.latex" --listings
+
       - name: Upload Generated Documentation Files
         uses: actions/upload-artifact@v4
         with:
-          name: docs
-          path: output
+          name: build-files
+          path: docs/dist/*
