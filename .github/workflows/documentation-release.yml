@@ -24,7 +24,14 @@ jobs:
       - name: Fetch TexLive Profile
         run: curl https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/.texlife.profile > .texlife.profile
       
+      - name: Retrieve TexLive from Cache
+        uses: actions/cache/restore@v3
+        id: restore-cache-texlive-install
+        with:
+          key: ${{ runner.os }}-texlive-${{ hashFiles('~/.texlive.profile') }}
+
       - name: Install TexLive
+        if: steps.restore-cache-texlive-install.outputs.cache-hit != 'true'
         env:
           REMOTE: http://mirror.ctan.org/systems/texlive/tlnet
           INSTALL: '/tmp/install-texlive'
@@ -39,6 +46,13 @@ jobs:
           echo "${TEXBIN}" >> $GITHUB_PATH
           sudo chown -hR $(whoami) "$TEXLIVE_DIR"
       
+      - name: Cache TexLive Installation
+        uses: actions/cache/save@v3
+        id: cache-texlive-install
+        with:
+          path: /usr/local/texlive
+          key: ${{ runner.os }}-texlive-${{ hashFiles('~/.texlive.profile') }}
+
       - name: Initialization for tlmgr for TexLive Plugin System
         run: |
           sudo apt-get update -qq && sudo apt-get install xzdec -y
