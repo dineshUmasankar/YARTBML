@@ -29,7 +29,9 @@ jobs:
         id: restore-cache-texlive-install
         with:
           path: /usr/local/texlive
-          key: ${{ runner.os }}-texlive-
+          key: ${{ runner.os }}-texlive
+          restore-keys: |
+            Linux-texlive-
 
       - name: Install TexLive
         if: steps.restore-cache-texlive-install.outputs.cache-hit != 'true'
