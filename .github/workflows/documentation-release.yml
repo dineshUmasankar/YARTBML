@@ -6,11 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  gen_docs:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,52 +19,50 @@ jobs:
         env:
           PANDOC_VERSION: "3.1.9"
         run: wget -qO- https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz | sudo tar xzf - --strip-components 1 -C /usr/local/
-      
-      - name: Fetch TexLive Profile
-        run: curl https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/.texlife.profile > .texlife.profile
-      
-      - name: Retrieve TexLive from Cache
+
+      - name: Get TexLive Profile
+        run: |
+          mkdir tl_profile
+          curl https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/.texlife.profile > tl_profile/.texlife.profile
+
+      - name: Create TexLive Installation Folder
+        env:
+          TEXLIVE_DIRECTORY: '/usr/local/texlive'
+        run: |
+          sudo mkdir -p ${TEXLIVE_DIRECTORY}
+          sudo chown -hR $(whoami) "$TEXLIVE_DIRECTORY"
+
+      - name: Restore Cache
         uses: actions/cache/restore@v4
-        id: restore-cache-texlive-install
+        id: restore-cache
         with:
           path: /usr/local/texlive
-          key: ${{ runner.os }}-texlive
-          restore-keys: |
-            Linux-texlive-
+          key: ${{ runner.os }}-profile-${{ hashFiles('tl_profile') }}-v1
 
       - name: Install TexLive
-        if: steps.restore-cache-texlive-install.outputs.cache-hit != 'true'
+        if: steps.restore-cache.outputs.cache-hit != 'true'
         env:
           REMOTE: http://mirror.ctan.org/systems/texlive/tlnet
           INSTALL: '/tmp/install-texlive'
         run: |
           mkdir -p ${INSTALL}
           curl -sSL ${REMOTE}/install-tl-unx.tar.gz | tar -xzv -C $INSTALL --strip-components=1
-          sudo ${INSTALL}/install-tl --no-gui --profile .texlife.profile
+          sudo ${INSTALL}/install-tl --no-gui --profile tl_profile/.texlife.profile
           VERSION=$($INSTALL/install-tl --version | grep 'version' | grep -o '[0-9]\{4\}')
           PLATFORM=$($INSTALL/install-tl --print-platform)
           TEXLIVE_DIR="/usr/local/texlive/${VERSION}"
           TEXBIN="/usr/local/texlive/${VERSION}/bin/${PLATFORM}"
           echo "${TEXBIN}" >> $GITHUB_PATH
           sudo chown -hR $(whoami) "$TEXLIVE_DIR"
-      
+
       - name: Initialization for tlmgr for TexLive Plugin System
+        if: steps.restore-cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update -qq && sudo apt-get install xzdec -y
           tlmgr init-usertree
-      
-      - name: Setup Fonts & Image Conversion Utilities
-        run: sudo apt-get update -qq && sudo apt-get install fonts-noto-cjk poppler-utils -y    
-      
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      
-      - name: Install Pandoc-Python Filters
-        run: pip install pandoc-latex-environment
-      
+
       - name: Install LaTeX Packages
+        if: steps.restore-cache.outputs.cache-hit != 'true'
         run: |
           tlmgr install adjustbox background bidi csquotes footmisc footnotebackref fvextra mdframed pagecolor sourcecodepro sourcesanspro titling ulem upquote xurl hardwrap catchfile
           # trial and error
@@ -76,13 +73,39 @@ jobs:
           tlmgr install awesomebox fontawesome5
           # packages only needed for some examples (example boxes-with-pandoc-latex-environment-and-tcolorbox)
           tlmgr install tcolorbox pgf etoolbox environ trimspaces
-      
-      - name: Cache TexLive Installation
+
+      - name: Cache Files
         uses: actions/cache/save@v4
-        id: cache-texlive-install
+        if: steps.restore-cache.outputs.cache-hit != 'true'
+        id: cache
         with:
           path: /usr/local/texlive
-          key: ${{ runner.os }}-texlive
+          key: ${{ runner.os }}-profile-${{ hashFiles('tl_profile') }}-v1
+
+      - name: Register TexLive Environment Variables
+        if: steps.restore-cache.outputs.cache-hit == 'true'
+        env:
+          REMOTE: http://mirror.ctan.org/systems/texlive/tlnet
+          INSTALL: '/tmp/install-texlive'
+        run: |
+          mkdir -p ${INSTALL}
+          curl -sSL ${REMOTE}/install-tl-unx.tar.gz | tar -xzv -C $INSTALL --strip-components=1
+          VERSION=$($INSTALL/install-tl --version | grep 'version' | grep -o '[0-9]\{4\}')
+          PLATFORM=$($INSTALL/install-tl --print-platform)
+          TEXLIVE_DIR="/usr/local/texlive/${VERSION}"
+          TEXBIN="/usr/local/texlive/${VERSION}/bin/${PLATFORM}"
+          echo "${TEXBIN}" >> $GITHUB_PATH
+
+      - name: Setup Fonts & Image Conversion Utilities
+        run: sudo apt-get update -qq && sudo apt-get install fonts-noto-cjk poppler-utils -y
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+            python-version: '3.12'
+
+      - name: Install Pandoc-Python Filters
+        run: pip install pandoc-latex-environment
 
       - name: Download Latest Eisvogel Template
         env:
