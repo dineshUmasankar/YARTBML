@@ -19,7 +19,7 @@
   </a>
 
   <h3 align="center">YARTBML</h3>
-  <p align="center">Yet Another Implementation of Thorsten Ball's Monkey 
+  <p align="center">Yet Another Re-Implementation of Thorsten Ball's Monkey 
   </p>
 </div>
 
