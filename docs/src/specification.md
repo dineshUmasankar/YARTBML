@@ -1,43 +1,10 @@
----
-title: "Example PDF"
-author: [Author]
-date: "2017-02-20"
-subject: "Markdown"
-keywords: [Markdown, Example]
-lang: "en"
-...
-
-# Vinaque sanguine metuenti cuiquam Alcyone fixus
-
-## Aesculeae domus vincemur et Veneris adsuetus lapsum
-
-Lorem markdownum Letoia, et alios: figurae flectentem annis aliquid Peneosque ab
-esse, obstat gravitate. Obscura atque coniuge, per de coniunx, sibi **medias
-commentaque virgine** anima tamen comitemque petis, sed. In Amphion vestros
-hamos ire arceor mandere spicula, in licet aliquando.
-
-```java
-public class Example implements LoremIpsum {
-	public static void main(String[] args) {
-		if(args.length < 2) {
-			System.out.println("Lorem ipsum dolor sit amet");
-		}
-	} // Obscura atque coniuge, per de coniunx
-}
-```
-
-Porrigitur et Pallas nuper longusque cratere habuisse sepulcro pectore fertur.
-Laudat ille auditi; vertitur iura tum nepotis causa; motus. Diva virtus! Acrota
-destruitis vos iubet quo et classis excessere Scyrumve spiro subitusque mente
-Pirithoi abstulit, lapides.
-
 # YARTBML Language Specification
 
-## 1 Introduction
+# 1 Introduction
 
 YARTBML is a functional programming langauge with a set of basic primitive and complex datatypes. It is a statically typed general purpose langauage that runs on top of GO.The YARTBML language uses the GO compiler to translate the source file into machine code.
 
-## 2 Lexical Structure
+# 2 Lexical Structure
 This section specifies the lexical structure of the programming language.
 
 ### 2.1 Keywords
@@ -89,15 +56,107 @@ Identifiers are sequences of letters, digits, and underscores that do not start 
 <newline> ::= "\n"
 ```
 
-## Grammer
+# 3 Grammar
+This section specifies the grammar of the language
 
+### 3.1 Binding Values
+The YARTBML REPL allows users to bind values to names using the let statement.
+```
+<let_statement> ::= "let" <identifier> "=" <expression> ";"
+```
 
+### 3.2 Supported Data Types
+In addition to integers, booleans, and strings, YARTBML supports arrays and hashes.
 
+### 3.3 Binding Arrays
+Arrays of integers can be bound to names using the following syntax:
+```
+<let_statement> ::= "let" <identifier> "=" "[" <array_elements> "]" ";"
+<array_elements> ::= <integer> ("," <integer>)*
+<array_elements> ::= <char> ("," <char>)*
+<array_elements> ::= <string> ("," <string>)*
+```
 
+### 3.4 Binding Hashes
+Hashes, where values are associated with keys, can be bound to names as follows:
+```
+<let_statement> ::= "let" <identifier> "=" "{" <hash_pairs> "}" ";"
+<hash_pairs> ::= <hash_pair> ("," <hash_pair>)*
+<hash_pair> ::= <string> ":" <expression>
+```
 
+### 3.5 Accessing Elements
+Elements in arrays and hashes are accessed using index expressions.
+```
+<index_expression> ::= <identifier> "[" <expression> "]"
+<index_expression> ::= <identifier> "[" <string> "]"
+```
 
+### 3.6 Binding Functions
+Functions can be bound to names using the `let` statement, with optional `return` statements.
 
+```
+<let_statement> ::= "let" <identifier> "=" "fn" "(" <parameters> ")" <block_statement>
+<block_statement> ::= "{" <statements>* "}"
+<statements> ::= <let_statement> | <expression> ";"
+<expression> ::= <return_statement> | <assignment_statement>
+<return_statement> ::= "return" <expression>
+<assignment_statement> ::= <expression> ";"
+```
 
+### 3.7 Calling Functions
+Functions are called by their names followed by arguments.
+```
+<function_call> ::= <identifier> "(" <arguments> ")"
+<arguments> ::= <expression> ("," <expression>)*
+```
+
+### 3.8 Recursive Functions
+Recursive functions are supported, enabling functions to call themselves.
+
+### 3.9 Higher Order Functions
+YARTBML also supports higher-order functions, which are functions that take other functions as arguments.
+
+```
+<let_statement> ::= "let" <identifier> "=" "fn" "(" <parameters> ")" <block_statement>
+<parameters> ::= <identifier> ("," <identifier>)*
+```
+
+# 4 Example Program
+```
+let age = 1;
+let name = "YARTBML";
+let result = 10 * (20 / 2);
+
+let myArray = [1, 2, 3, 4, 5];
+let john = {"name": "John", "age": 28};
+
+myArray[0] // => 1
+john["name"] // => "John"
+
+let add = fn(a, b) { a + b; };
+
+add(1, 2); // => 3
+
+let fibonacci = fn(x) { 
+	if (x == 0) { 
+		0 
+	} else { 
+		if (x == 1) { 
+			1 
+		} else { 
+			fibonacci(x - 1) + fibonacci(x - 2); 
+		} 
+	} 
+};
+let twice = fn(f, x) { 
+	return f(f(x)); 
+};
+let addTwo = fn(x) { 
+	return x + 2; 
+};
+twice(addTwo, 2); // => 6
+```
 
 
 
