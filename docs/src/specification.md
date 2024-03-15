@@ -1,3 +1,12 @@
+---
+title: "YARTBML Language Specification"
+author: [Joseph Porrino]
+date: "2024-03-24"
+subject: "Markdown"
+keywords: [Markdown, Example]
+lang: "en"
+...
+
 # YARTBML Language Specification
 
 # 1 Introduction
