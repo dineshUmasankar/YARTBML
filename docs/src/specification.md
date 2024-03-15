@@ -11,7 +11,7 @@ This section specifies the lexical structure of the programming language.
 The language includes reserved keywords that have special meanings and cannot be used as identifiers.
 
 ```
-<keyword> ::= "let" | "fn" | "return" | "if" | "else"
+<keyword> ::= "let" | "fn" | "return" | "if" | "else" | "true" | "false"
 ```
 
 ### 2.2 Integer Literals
@@ -88,8 +88,14 @@ Hashes, where values are associated with keys, can be bound to names as follows:
 ### 3.5 Accessing Elements
 Elements in arrays and hashes are accessed using index expressions.
 ```
+Hash
 <index_expression> ::= <identifier> "[" <expression> "]"
 <index_expression> ::= <identifier> "[" <string> "]"
+
+Array
+<index_expression> ::= <identifier> "[" <expression> "]"
+<index_expression> ::= <identifier> "[" <int> "]"
+
 ```
 
 ### 3.6 Binding Functions
@@ -122,7 +128,16 @@ YARTBML also supports higher-order functions, which are functions that take othe
 <parameters> ::= <identifier> ("," <identifier>)*
 ```
 
-# 4 Example Program
+### 3.10 Selection Sequences
+YARTBML supports control flow using the `if` keyword followed by the expression to evaluate then an optional `else`. If the value is `true` the preceding block statement is evaluated, if `false` the else statement is evaluated.
+
+```
+<if_statement> ::= "if" "(" <expression> ")" <block_statement> "else" <block_statement>
+```
+# 4 Scoping Rules
+YARTBML has lexical scoping, meaning that the scope of a variable is determined by its location in the source code. Variables declared in outer scopes are accessible in inner scopes unless shadowed by variables with the same name. YARTBML supports block-level scoping.
+
+# 5 Example Program
 ```
 let age = 1;
 let name = "YARTBML";
@@ -158,5 +173,7 @@ let addTwo = fn(x) {
 twice(addTwo, 2); // => 6
 ```
 
+# 5 REPL (Read Eval Print Loop)
+YARTBML uses a REPL to read input, send it to the interpreter for evaluation, print the result/output of the interpreter and start again. Each line is read, tokenized and interpreted individually by the REPL.
 
 
