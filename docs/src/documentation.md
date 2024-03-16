@@ -25,6 +25,8 @@ In order to get started with YARTBML, ensure you have a Go development environme
 
 [github.com/dineshUmasankar/YARTBML](https://github.com/dineshUmasankar/YARTBML)
 
+\pagebreak 
+
 ## Language Features
 
 ### Data Types
@@ -69,6 +71,8 @@ if (age >= 18) {
 }
 ```
 
+\pagebreak 
+
 ## Built-in Functions
 
 YARTBML enriches the Monkey language with a suite of built-in functions designed to facilitate common programming tasks:
@@ -89,13 +93,15 @@ We can also implement the Fibonacci sequence to showcase function recursion in Y
 
 ```
 let fibonacci = fn(x) {
-    		if (x == 0) {
-        			0
-    		} else if (x == 1) {
-        			1
-    		} else {
-        			fibonacci(x - 1) + fibonacci(x - 2)
-    		}
+  if (x == 0) {
+    0
+  } else {
+    if (x == 1) {
+      return 1;
+    } else {
+      fibonacci(x - 1) + fibonacci(x - 2);
+    }
+  }
 };
 puts(fibonacci(10));
 ```
