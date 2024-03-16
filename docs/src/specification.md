@@ -104,10 +104,9 @@ Operators are symbols used to perform operations on values.
 ### 2.6 Identifiers
 Identifiers are sequences of letters, digits, and underscores that do not start with a digit.
 ```
-<identifier> ::= 
-	<letter> (<letter> 
-				| <digit> 
-				| "_")*
+<identifier> ::= <letter> (<letter> 
+							| <digit> 
+							| "_")*
 <letter> ::= 
 	  "a" 
 	| "b" 
@@ -124,6 +123,8 @@ Identifiers are sequences of letters, digits, and underscores that do not start 
 	| "9"
 ```
 
+\pagebreak
+
 ### 2.7 White Space
 Whitespace characters include spaces, tabs, and newline characters and are used to separate tokens and improve code readability.
 ```
@@ -135,8 +136,6 @@ Whitespace characters include spaces, tabs, and newline characters and are used 
 <tab> ::= "\t"
 <newline> ::= "\n"
 ```
-
-\pagebreak
 
 # 3 Grammar
 This section specifies the grammar of the language
