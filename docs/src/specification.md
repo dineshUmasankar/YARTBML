@@ -14,7 +14,7 @@ lang: "en"
 
 # 1 Introduction
 
-YARTBML is a functional programming langauge with a set of basic primitive and complex datatypes. It is a statically typed general purpose langauage that runs on top of GO.The YARTBML language uses the GO compiler to translate the source file into machine code.
+YARTBML is a functional programming langauge with a set of basic primitive and complex datatypes. It is a statically typed general purpose langauage that runs on top of GO. The YARTBML language uses the GO compiler to translate the source file into machine code.
 
 # 2 Lexical Structure
 This section specifies the lexical structure of the programming language.
@@ -227,7 +227,8 @@ YARTBML supports control flow using the `if` keyword followed by the expression 
 
 ```
 <if_statement> ::= 
-	"if" "(" <expression> ")" <block_statement> "else" <block_statement>
+	"if" "(" <expression> ")" <block_statement> 
+	"else" <block_statement>
 ```
 # 4 Scoping Rules
 YARTBML has lexical scoping, meaning that the scope of a variable is determined by its location in the source code. Variables declared in outer scopes are accessible in inner scopes unless shadowed by variables with the same name. YARTBML supports block-level scoping.
@@ -272,6 +273,8 @@ twice(addTwo, 2); // => 6
 
 # 5 REPL (Read Eval Print Loop)
 YARTBML uses a REPL to read input, send it to the interpreter for evaluation, print the result/output of the interpreter and start again. Each line is read, tokenized and interpreted individually by the REPL.
+
+\pagebreak
 
 # Parsing and Interpretation order
 YARTBML employs recursive descent for parsing, specifically utilizing the PRATT parsing algorithm to enhance parsing speed. A tree walker is then employed to interpret the Abstract Syntax Tree (AST) produced by the parser.
