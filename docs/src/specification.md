@@ -159,6 +159,8 @@ Arrays of integers can be bound to names using the following syntax:
 <array_elements> ::= <string> ("," <string>)*
 ```
 
+\pagebreak
+
 ### 3.4 Binding Values to Hashmaps
 Hashmaps, where values are associated with keys, can be bound to names as follows:
 ```
@@ -167,8 +169,6 @@ Hashmaps, where values are associated with keys, can be bound to names as follow
 <hash_pairs> ::= <hash_pair> ("," <hash_pair>)*
 <hash_pair> ::= <string> ":" <expression>
 ```
-
-\pagebreak
 
 ### 3.5 Accessing Elements
 Elements in arrays and hashmaps are accessed using index expressions.
