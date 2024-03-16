@@ -1,6 +1,9 @@
 ---
 title: "YARTBML Language Specification"
-author: [Joseph Porrino]
+author: [Joseph Porrino, 
+		Dinesh Umasankar, 
+		Katherine Banis, 
+		Paul Jensen]
 date: "2024-03-24"
 subject: "Markdown"
 keywords: [Markdown, Example]
@@ -33,14 +36,17 @@ The language includes reserved keywords that have special meanings and cannot be
 ### 2.2 Integer Literals
 Integers are sequences of digits
 ```
-<integer> ::= <digit>+
+<integer> ::= 
+	<digit>+
 ```
 
 ### 2.3 String Literals
 Strings are sequences of characters enclosed in double quotes.
 ```
-<string> ::= "\"" <char>* "\""
-<char> ::= <any character except newline or double quote>
+<string> ::= 
+	"\"" <char>* "\""
+<char> ::= 
+	<any character except newline or double quote>
 ```
 
 ### 2.4 Delimiters
@@ -77,18 +83,39 @@ Operators are symbols used to perform operations on values.
 ### 2.6 Identifiers
 Identifiers are sequences of letters, digits, and underscores that do not start with a digit.
 ```
-<identifier> ::= <letter> (<letter> | <digit> | "_")*
-<letter> ::= "a" | "b" | ... | "z" | "A" | "B" | ... | "Z"
-<digit> ::= "0" | "1" | ... | "9"
+<identifier> ::= 
+	<letter> (<letter> 
+				| <digit> 
+				| "_")*
+<letter> ::= 
+	  "a" 
+	| "b" 
+	| ... 
+	| "z" 
+	| "A" 
+	| "B" 
+	| ... 
+	| "Z"
+<digit> ::= 
+	  "0" 
+	| "1" 
+	| ... 
+	| "9"
 ```
 
 ### 2.7 White Space
 Whitespace characters include spaces, tabs, and newline characters and are used to separate tokens and improve code readability.
 ```
-<whitespace> ::= <space> | <tab> | <newline>
-<space> ::= " "
-<tab> ::= "\t"
-<newline> ::= "\n"
+<whitespace> ::= 
+	  <space> 
+	| <tab> 
+	| <newline>
+<space> ::= 
+	" "
+<tab> ::= 
+	"\t"
+<newline> ::= 
+	"\n"
 ```
 
 # 3 Grammar
@@ -97,7 +124,8 @@ This section specifies the grammar of the language
 ### 3.1 Binding Values
 The YARTBML REPL allows users to bind values to names using the let statement.
 ```
-<let_statement> ::= "let" <identifier> "=" <expression> ";"
+<let_statement> ::= 
+	"let" <identifier> "=" <expression> ";"
 ```
 
 ### 3.2 Supported Data Types
@@ -106,30 +134,41 @@ In addition to integers, booleans, and strings, YARTBML supports arrays and hash
 ### 3.3 Binding Arrays
 Arrays of integers can be bound to names using the following syntax:
 ```
-<let_statement> ::= "let" <identifier> "=" "[" <array_elements> "]" ";"
-<array_elements> ::= <integer> ("," <integer>)*
-<array_elements> ::= <char> ("," <char>)*
-<array_elements> ::= <string> ("," <string>)*
+<let_statement> ::= 
+	"let" <identifier> "=" "[" <array_elements> "]" ";"
+<array_elements> ::= 
+	<integer> ("," <integer>)*
+<array_elements> ::= 
+	<char> ("," <char>)*
+<array_elements> ::= 
+	<string> ("," <string>)*
 ```
 
 ### 3.4 Binding Hashes
 Hashes, where values are associated with keys, can be bound to names as follows:
 ```
-<let_statement> ::= "let" <identifier> "=" "{" <hash_pairs> "}" ";"
-<hash_pairs> ::= <hash_pair> ("," <hash_pair>)*
-<hash_pair> ::= <string> ":" <expression>
+<let_statement> ::= 
+	"let" <identifier> "=" "{" <hash_pairs> "}" ";"
+<hash_pairs> ::= 
+	<hash_pair> ("," <hash_pair>)*
+<hash_pair> ::= 
+	<string> ":" <expression>
 ```
 
 ### 3.5 Accessing Elements
 Elements in arrays and hashes are accessed using index expressions.
 ```
 Hash
-<index_expression> ::= <identifier> "[" <expression> "]"
-<index_expression> ::= <identifier> "[" <string> "]"
+<index_expression> ::= 
+	<identifier> "[" <expression> "]"
+<index_expression> ::= 
+	<identifier> "[" <string> "]"
 
 Array
-<index_expression> ::= <identifier> "[" <expression> "]"
-<index_expression> ::= <identifier> "[" <int> "]"
+<index_expression> ::= 
+	<identifier> "[" <expression> "]"
+<index_expression> ::= 
+	<identifier> "[" <int> "]"
 
 ```
 
@@ -137,19 +176,29 @@ Array
 Functions can be bound to names using the `let` statement, with optional `return` statements.
 
 ```
-<let_statement> ::= "let" <identifier> "=" "fn" "(" <parameters> ")" <block_statement>
-<block_statement> ::= "{" <statements>* "}"
-<statements> ::= <let_statement> | <expression> ";"
-<expression> ::= <return_statement> | <assignment_statement>
-<return_statement> ::= "return" <expression>
-<assignment_statement> ::= <expression> ";"
+<let_statement> ::= 
+	"let" <identifier> "=" "fn" "(" <parameters> ")" <block_statement>
+<block_statement> ::= 
+	"{" <statements>* "}"
+<statements> ::= 
+	  <let_statement> 
+	| <expression> ";"
+<expression> ::= 
+	  <return_statement> 
+	| <assignment_statement>
+<return_statement> ::= 
+	"return" <expression>
+<assignment_statement> ::= 
+	<expression> ";"
 ```
 
 ### 3.7 Calling Functions
 Functions are called by their names followed by arguments.
 ```
-<function_call> ::= <identifier> "(" <arguments> ")"
-<arguments> ::= <expression> ("," <expression>)*
+<function_call> ::= 
+	<identifier> "(" <arguments> ")"
+<arguments> ::= 
+	<expression> ("," <expression>)*
 ```
 
 ### 3.8 Recursive Functions
@@ -159,15 +208,18 @@ Recursive functions are supported, enabling functions to call themselves.
 YARTBML also supports higher-order functions, which are functions that take other functions as arguments.
 
 ```
-<let_statement> ::= "let" <identifier> "=" "fn" "(" <parameters> ")" <block_statement>
-<parameters> ::= <identifier> ("," <identifier>)*
+<let_statement> ::= 
+	"let" <identifier> "=" "fn" "(" <parameters> ")" <block_statement>
+<parameters> ::= 
+	<identifier> ("," <identifier>)*
 ```
 
 ### 3.10 Selection Sequences
 YARTBML supports control flow using the `if` keyword followed by the expression to evaluate then an optional `else`. If the value is `true` the preceding block statement is evaluated, if `false` the else statement is evaluated.
 
 ```
-<if_statement> ::= "if" "(" <expression> ")" <block_statement> "else" <block_statement>
+<if_statement> ::= 
+	"if" "(" <expression> ")" <block_statement> "else" <block_statement>
 ```
 # 4 Scoping Rules
 YARTBML has lexical scoping, meaning that the scope of a variable is determined by its location in the source code. Variables declared in outer scopes are accessible in inner scopes unless shadowed by variables with the same name. YARTBML supports block-level scoping.
@@ -211,9 +263,6 @@ twice(addTwo, 2); // => 6
 # 5 REPL (Read Eval Print Loop)
 YARTBML uses a REPL to read input, send it to the interpreter for evaluation, print the result/output of the interpreter and start again. Each line is read, tokenized and interpreted individually by the REPL.
 
-# PRATT Precedence
-
 # Parsing and Interpretation order
-YARTBML uses recursive descent for the parser, specifically using the PRATT parsing algorithm to increase the speed if the algorithm. a tree walker for the interpreter
-
+YARTBML employs recursive descent for parsing, specifically utilizing the PRATT parsing algorithm to enhance parsing speed. A tree walker is then employed to interpret the Abstract Syntax Tree (AST) produced by the parser.
 
