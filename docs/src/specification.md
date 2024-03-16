@@ -40,6 +40,8 @@ Integers are sequences of digits
 	<digit>+
 ```
 
+\pagebreak
+
 ### 2.3 String Literals
 Strings are sequences of characters enclosed in double quotes.
 ```
