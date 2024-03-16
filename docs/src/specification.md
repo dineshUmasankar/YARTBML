@@ -20,7 +20,14 @@ This section specifies the lexical structure of the programming language.
 The language includes reserved keywords that have special meanings and cannot be used as identifiers.
 
 ```
-<keyword> ::= "let" | "fn" | "return" | "if" | "else" | "true" | "false"
+<keyword> ::= 
+      "let" 
+	| "fn" 
+	| "return" 
+	| "if" 
+	| "else" 
+	| "true" 
+	| "false"
 ```
 
 ### 2.2 Integer Literals
@@ -38,27 +45,46 @@ Strings are sequences of characters enclosed in double quotes.
 
 ### 2.4 Delimiters
 Delimiters separate tokens in the code.
- ```
- <delimiter> ::= "(" | ")" | "{" | "}" | "[" | "]" | "," | ";" | ":"
+```
+<delimiter> ::= 
+	  "(" 
+	| ")" 
+	| "{" 
+	| "}" 
+	| "[" 
+	| "]" 
+	| "," 
+	| ";" 
+	| ":"
+```
+
+### 2.5 Operators
+Operators are symbols used to perform operations on values.
+```
+<operator> ::= 
+	  "+" 
+	| "-" 
+	| "*" 
+	| "/" 
+	| "==" 
+	| "!=" 
+	| "<" 
+	| ">" 
+	| "<=" 
+	| ">="
  ```
 
- ### 2.5 Operators
- Operators are symbols used to perform operations on values.
- ```
-<operator> ::= "+" | "-" | "*" | "/" | "==" | "!=" | "<" | ">" | "<=" | ">="
- ```
-
- ### 2.6 Identifiers
+### 2.6 Identifiers
 Identifiers are sequences of letters, digits, and underscores that do not start with a digit.
- ```
+```
 <identifier> ::= <letter> (<letter> | <digit> | "_")*
 <letter> ::= "a" | "b" | ... | "z" | "A" | "B" | ... | "Z"
 <digit> ::= "0" | "1" | ... | "9"
- ```
+```
 
- ### 2.7 White Space
- Whitespace characters include spaces, tabs, and newline characters and are used to separate tokens and improve code readability.
- ```
+### 2.7 White Space
+Whitespace characters include spaces, tabs, and newline characters and are used to separate tokens and improve code readability.
+```
 <whitespace> ::= <space> | <tab> | <newline>
 <space> ::= " "
 <tab> ::= "\t"
@@ -184,5 +210,10 @@ twice(addTwo, 2); // => 6
 
 # 5 REPL (Read Eval Print Loop)
 YARTBML uses a REPL to read input, send it to the interpreter for evaluation, print the result/output of the interpreter and start again. Each line is read, tokenized and interpreted individually by the REPL.
+
+# PRATT Precedence
+
+# Parsing and Interpretation order
+YARTBML uses recursive descent for the parser, specifically using the PRATT parsing algorithm to increase the speed if the algorithm. a tree walker for the interpreter
 
 
