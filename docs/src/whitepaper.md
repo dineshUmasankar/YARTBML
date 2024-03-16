@@ -1,7 +1,7 @@
 ---
 title: "YARTBML Whitepaper"
-author: [Paul Jensen]
-date: "2024-03-14"
+author: [Katherine Bannis, Paul Jensen, Joseph Porrino, Dinesh Umasankar]
+date: "2024-03-15"
 subject: "Markdown"
 keywords: [Markdown, Example]
 lang: "en"
@@ -15,7 +15,7 @@ This whitepaper outlines the development of a new programming language interpret
 
 ## 1. Introduction
 
-The creation of a programming language interpreter is a profound exercise in understanding computation and language design. Following the guidance of Thorsten Ball, we embarked on a journey to not only replicate the foundational aspects of an interpreter as presented in "Writing An Interpreter In Go" but also to expand its capabilities. The goal was to create an interpreter that supports a rich set of features catering to modern programming paradigms.
+The creation of a programming language interpreter is a profound exercise in understanding computation and language design. Following the guidance of Thorsten Ball, we embark on a journey to not only replicate the foundational aspects of an interpreter as presented in "Writing An Interpreter In Go" but also to expand its capabilities. The goal is to create an interpreter that supports a rich set of features catering to modern programming paradigms.
 
 ## 2. Language Features
 
@@ -81,7 +81,7 @@ Building upon the foundational features, our interpreter includes several advanc
 
 ## 5. Conclusion
 
-The development of our interpreter, inspired by "Writing An Interpreter In Go," has resulted in a powerful and flexible tool that extends the foundational concepts introduced by Thorsten Ball. By supporting a wide range of features such as multiple data types, a REPL, arithmetic expressions, variable bindings, first-class and higher-order functions, built-in functions, recursion, and closures, we have created an interpreter that is both educational and practical for real-world programming. This project demonstrates the power of language design and the endless possibilities that come with building your own programming tools.
+The development of our interpreter, inspired by "Writing An Interpreter In Go," will result in a powerful and flexible tool that extends the foundational concepts introduced by Thorsten Ball. By supporting a wide range of features such as multiple data types, a REPL, arithmetic expressions, variable bindings, first-class and higher-order functions, built-in functions, recursion, and closures, we will create an interpreter that is both educational and practical for real-world programming. This project demonstrates the power of language design and the endless possibilities that come with building your own programming tools.
 
 ## 6. Future Work
 
