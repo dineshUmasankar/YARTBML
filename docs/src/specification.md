@@ -5,8 +5,8 @@ author: [Joseph Porrino,
 		Katherine Banis, 
 		Paul Jensen]
 date: "2024-03-24"
-subject: "Markdown"
-keywords: [Markdown, Example]
+subject: "Language Specification"
+keywords: [Specification]
 lang: "en"
 ...
 
@@ -14,7 +14,7 @@ lang: "en"
 
 # 1 Introduction
 
-YARTBML is a functional programming langauge with a set of basic primitive and complex datatypes. It is a statically typed general purpose langauage that runs on top of GO. The YARTBML language uses the GO compiler to translate the source file into machine code.
+YARTBML is a functional programming langauge with a set of basic primitive and complex datatypes. It is a statically typed general purpose language that runs with its own interpreter built in GO. Memory management is handled by GO, and the interpreter is a binary file which was compiled by Go to the specific machine architecture.
 
 # 2 Lexical Structure
 This section specifies the lexical structure of the programming language.
@@ -24,7 +24,7 @@ The language includes reserved keywords that have special meanings and cannot be
 
 ```
 <keyword> ::= 
-      "let" 
+          "let" 
 	| "fn" 
 	| "return" 
 	| "if" 
@@ -36,8 +36,7 @@ The language includes reserved keywords that have special meanings and cannot be
 ### 2.2 Integer Literals
 Integers are sequences of digits
 ```
-<integer> ::= 
-	<digit>+
+<integer> ::= <digit>+
 ```
 
 \pagebreak
@@ -45,8 +44,7 @@ Integers are sequences of digits
 ### 2.3 String Literals
 Strings are sequences of characters enclosed in double quotes.
 ```
-<string> ::= 
-	"\"" <char>* "\""
+<string> ::= "\"" <char>* "\""
 <char> ::= 
 	<any character except newline or double quote>
 ```
@@ -135,7 +133,7 @@ The YARTBML REPL allows users to bind values to names using the let statement.
 ```
 
 ### 3.2 Supported Data Types
-In addition to integers, booleans, and strings, YARTBML supports arrays and hashes.
+In addition to integers, booleans, and strings, YARTBML supports arrays and hashmaps.
 
 ### 3.3 Binding Arrays
 Arrays of integers can be bound to names using the following syntax:
@@ -150,8 +148,8 @@ Arrays of integers can be bound to names using the following syntax:
 	<string> ("," <string>)*
 ```
 
-### 3.4 Binding Hashes
-Hashes, where values are associated with keys, can be bound to names as follows:
+### 3.4 Binding Values to Hashmaps
+Hashmaps, where values are associated with keys, can be bound to names as follows:
 ```
 <let_statement> ::= 
 	"let" <identifier> "=" "{" <hash_pairs> "}" ";"
@@ -164,9 +162,9 @@ Hashes, where values are associated with keys, can be bound to names as follows:
 \pagebreak
 
 ### 3.5 Accessing Elements
-Elements in arrays and hashes are accessed using index expressions.
+Elements in arrays and hashmaps are accessed using index expressions.
 ```
-Hash
+Hashmaps
 <index_expression> ::= 
 	<identifier> "[" <expression> "]"
 <index_expression> ::= 
