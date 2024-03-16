@@ -271,8 +271,6 @@ twice(addTwo, 2); // => 6
 # 5 REPL (Read Eval Print Loop)
 YARTBML uses a REPL to read input, send it to the interpreter for evaluation, print the result/output of the interpreter and start again. Each line is read, tokenized and interpreted individually by the REPL.
 
-\pagebreak
-
 # Parsing and Interpretation order
 YARTBML employs recursive descent for parsing, specifically utilizing the PRATT parsing algorithm to enhance parsing speed. A tree walker is then employed to interpret the Abstract Syntax Tree (AST) produced by the parser.
 
