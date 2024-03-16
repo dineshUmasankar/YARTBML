@@ -1,6 +1,6 @@
 ---
 title: "YARTBML Language Documentation"
-author: [Katherine Banis]
+author: [Joseph Porrino, Dinesh Umasankar, Katherine Banis, Paul Jensen]
 date: "2024-03-15"
 subject: "Markdown"
 keywords: [Markdown, Example]
@@ -105,6 +105,8 @@ let fibonacci = fn(x) {
 };
 puts(fibonacci(10));
 ```
+
+\pagebreak
 
 ## Conclusion
 
