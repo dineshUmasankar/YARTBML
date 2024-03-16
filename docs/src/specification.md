@@ -232,6 +232,8 @@ YARTBML supports control flow using the `if` keyword followed by the expression 
 # 4 Scoping Rules
 YARTBML has lexical scoping, meaning that the scope of a variable is determined by its location in the source code. Variables declared in outer scopes are accessible in inner scopes unless shadowed by variables with the same name. YARTBML supports block-level scoping.
 
+\pagebreak
+
 # 5 Example Program
 ```
 let age = 1;
