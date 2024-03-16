@@ -101,8 +101,6 @@ Operators are symbols used to perform operations on values.
 	| ">="
  ```
 
-\pagebreak
-
 ### 2.6 Identifiers
 Identifiers are sequences of letters, digits, and underscores that do not start with a digit.
 ```
