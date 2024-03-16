@@ -82,6 +82,8 @@ Operators are symbols used to perform operations on values.
 	| ">="
  ```
 
+\pagebreak
+
 ### 2.6 Identifiers
 Identifiers are sequences of letters, digits, and underscores that do not start with a digit.
 ```
@@ -120,6 +122,8 @@ Whitespace characters include spaces, tabs, and newline characters and are used 
 	"\n"
 ```
 
+\pagebreak
+
 # 3 Grammar
 This section specifies the grammar of the language
 
@@ -156,6 +160,8 @@ Hashes, where values are associated with keys, can be bound to names as follows:
 <hash_pair> ::= 
 	<string> ":" <expression>
 ```
+
+\pagebreak
 
 ### 3.5 Accessing Elements
 Elements in arrays and hashes are accessed using index expressions.
