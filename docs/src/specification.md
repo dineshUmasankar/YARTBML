@@ -24,7 +24,7 @@ The language includes reserved keywords that have special meanings and cannot be
 
 ```
 <keyword> ::= 
-          "let" 
+      "let" 
 	| "fn" 
 	| "return" 
 	| "if" 
@@ -45,8 +45,29 @@ Integers are sequences of digits
 Strings are sequences of characters enclosed in double quotes.
 ```
 <string> ::= "\"" <char>* "\""
-<char> ::= 
-	<any character except newline or double quote>
+<char> ::= <any character except newline or double quote>
+```
+
+### 2.4 Array Literals
+Arrays can contain sequences of either integers or strings.
+```
+<array_literal> ::= "[" [ <element_list> ] "]"
+<element_list> ::= <element> ( "," <element> )*
+<element> ::= <expression>
+<expression> ::= <integer>
+<expression> ::= <string>
+```
+
+### 2.5 Hashmap Literals
+Hashmaps contain a string as the key and an expression as the value
+```
+<record_literal> ::= "{" [ <property_list> ] "}"
+<property_list> ::= <property> ( "," <property> )*
+<property> ::= <identifier> ":" <expression>
+<identifier> ::= <string>
+<expression> ::= 
+	  <integer> 
+	| <string>
 ```
 
 ### 2.4 Delimiters
@@ -112,12 +133,9 @@ Whitespace characters include spaces, tabs, and newline characters and are used 
 	  <space> 
 	| <tab> 
 	| <newline>
-<space> ::= 
-	" "
-<tab> ::= 
-	"\t"
-<newline> ::= 
-	"\n"
+<space> ::= " "
+<tab> ::= "\t"
+<newline> ::= "\n"
 ```
 
 \pagebreak
@@ -128,8 +146,7 @@ This section specifies the grammar of the language
 ### 3.1 Binding Values
 The YARTBML REPL allows users to bind values to names using the let statement.
 ```
-<let_statement> ::= 
-	"let" <identifier> "=" <expression> ";"
+<let_statement> ::= "let" <identifier> "=" <expression> ";"
 ```
 
 ### 3.2 Supported Data Types
@@ -140,12 +157,9 @@ Arrays of integers can be bound to names using the following syntax:
 ```
 <let_statement> ::= 
 	"let" <identifier> "=" "[" <array_elements> "]" ";"
-<array_elements> ::= 
-	<integer> ("," <integer>)*
-<array_elements> ::= 
-	<char> ("," <char>)*
-<array_elements> ::= 
-	<string> ("," <string>)*
+<array_elements> ::= <integer> ("," <integer>)*
+<array_elements> ::= <char> ("," <char>)*
+<array_elements> ::= <string> ("," <string>)*
 ```
 
 ### 3.4 Binding Values to Hashmaps
@@ -153,10 +167,8 @@ Hashmaps, where values are associated with keys, can be bound to names as follow
 ```
 <let_statement> ::= 
 	"let" <identifier> "=" "{" <hash_pairs> "}" ";"
-<hash_pairs> ::= 
-	<hash_pair> ("," <hash_pair>)*
-<hash_pair> ::= 
-	<string> ":" <expression>
+<hash_pairs> ::= <hash_pair> ("," <hash_pair>)*
+<hash_pair> ::= <string> ":" <expression>
 ```
 
 \pagebreak
@@ -165,16 +177,12 @@ Hashmaps, where values are associated with keys, can be bound to names as follow
 Elements in arrays and hashmaps are accessed using index expressions.
 ```
 Hashmaps
-<index_expression> ::= 
-	<identifier> "[" <expression> "]"
-<index_expression> ::= 
-	<identifier> "[" <string> "]"
+<index_expression> ::= <identifier> "[" <expression> "]"
+<index_expression> ::= <identifier> "[" <string> "]"
 
 Array
-<index_expression> ::= 
-	<identifier> "[" <expression> "]"
-<index_expression> ::= 
-	<identifier> "[" <int> "]"
+<index_expression> ::= <identifier> "[" <expression> "]"
+<index_expression> ::= <identifier> "[" <int> "]"
 
 ```
 
@@ -184,27 +192,22 @@ Functions can be bound to names using the `let` statement, with optional `return
 ```
 <let_statement> ::= 
 	"let" <identifier> "=" "fn" "(" <parameters> ")" <block_statement>
-<block_statement> ::= 
-	"{" <statements>* "}"
+<block_statement> ::= "{" <statements>* "}"
 <statements> ::= 
 	  <let_statement> 
 	| <expression> ";"
 <expression> ::= 
 	  <return_statement> 
 	| <assignment_statement>
-<return_statement> ::= 
-	"return" <expression>
-<assignment_statement> ::= 
-	<expression> ";"
+<return_statement> ::= "return" <expression>
+<assignment_statement> ::= <expression> ";"
 ```
 
 ### 3.7 Calling Functions
 Functions are called by their names followed by arguments.
 ```
-<function_call> ::= 
-	<identifier> "(" <arguments> ")"
-<arguments> ::= 
-	<expression> ("," <expression>)*
+<function_call> ::= <identifier> "(" <arguments> ")"
+<arguments> ::= <expression> ("," <expression>)*
 ```
 
 ### 3.8 Recursive Functions
@@ -216,8 +219,7 @@ YARTBML also supports higher-order functions, which are functions that take othe
 ```
 <let_statement> ::= 
 	"let" <identifier> "=" "fn" "(" <parameters> ")" <block_statement>
-<parameters> ::= 
-	<identifier> ("," <identifier>)*
+<parameters> ::= <identifier> ("," <identifier>)*
 ```
 
 ### 3.10 Selection Sequences
