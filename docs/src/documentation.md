@@ -37,7 +37,7 @@ YARTBML supports several primary data types, including:
 - Booleans: Logical type representing true or false.
 - Strings: A sequence of characters enclosed in double quotes, e.g., "YARTBML is awesome!".
 - Arrays: A list of elements, e.g., [1, 2, 3, 4].
-- Hashes: Key-value pairs, allowing for efficient data lookup, e.g., {"name": "YARTBML", "type": "Interpreter"}.
+- Hashmaps: Key-value pairs, allowing for efficient data lookup, e.g., {"name": "YARTBML", "type": "Interpreter"}.
 
 ### Variables
 
