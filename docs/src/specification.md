@@ -29,11 +29,10 @@ The language includes reserved keywords that have special meanings and cannot be
 	| "return" 
 	| "if" 
 	| "else" 
-	| "true" 
-	| "false"
 ```
 
-### 2.2 Integer Literals
+### 2.2 Literals
+#### 2.21 Integer Literals
 Integers are sequences of digits
 ```
 <integer> ::= <digit>+
@@ -41,36 +40,36 @@ Integers are sequences of digits
 
 \pagebreak
 
-### 2.3 String Literals
+#### 2.22 String Literals
 Strings are sequences of characters enclosed in double quotes.
 ```
 <string> ::= "\"" <char>* "\""
 <char> ::= <any character except newline or double quote>
 ```
 
-### 2.4 Array Literals
+#### 2.23 Boolean Literals
+Booleans are true/false values
+```
+<boolean> ::= "true" | "false"
+```
+
+#### 2.24 Array Literals
 Arrays can contain sequences of either integers or strings.
 ```
-<array_literal> ::= "[" [ <element_list> ] "]"
+<array_literal> ::= "[", [ <element_list> ], "]"
 <element_list> ::= <element> ( "," <element> )*
-<element> ::= <expression>
-<expression> ::= <integer>
-<expression> ::= <string>
+<element_literals> ::= <string> | <char> | <boolean> | <array_literal> | <hashmap_literal>
 ```
 
-### 2.5 Hashmap Literals
+#### 2.25 Hashmap Literals
 Hashmaps contain a string as the key and an expression as the value
 ```
-<record_literal> ::= "{" [ <property_list> ] "}"
+<record_literal> ::= "{", [ <property_list> ], "}"
 <property_list> ::= <property> ( "," <property> )*
-<property> ::= <identifier> ":" <expression>
-<identifier> ::= <string>
-<expression> ::= 
-	  <integer> 
-	| <string>
+<property> ::= <element_literal> ":" <element_literal>
 ```
 
-### 2.4 Delimiters
+### 2.3 Delimiters
 Delimiters separate tokens in the code.
 ```
 <delimiter> ::= 
@@ -85,7 +84,7 @@ Delimiters separate tokens in the code.
 	| ":"
 ```
 
-### 2.5 Operators
+### 2.4 Operators
 Operators are symbols used to perform operations on values.
 ```
 <operator> ::= 
@@ -101,7 +100,7 @@ Operators are symbols used to perform operations on values.
 	| ">="
  ```
 
-### 2.6 Identifiers
+### 2.5 Identifiers
 Identifiers are sequences of letters, digits, and underscores that do not start with a digit.
 ```
 <identifier> ::= <letter> (<letter> 
@@ -125,7 +124,7 @@ Identifiers are sequences of letters, digits, and underscores that do not start 
 
 \pagebreak
 
-### 2.7 White Space
+### 2.6 White Space
 Whitespace characters include spaces, tabs, and newline characters and are used to separate tokens and improve code readability.
 ```
 <whitespace> ::= 
@@ -143,32 +142,11 @@ This section specifies the grammar of the language
 ### 3.1 Binding Values
 The YARTBML REPL allows users to bind values to names using the let statement.
 ```
-<let_statement> ::= "let" <identifier> "=" <expression> ";"
+<let_statement> ::= "let" <identifier> "=" <element_literal> ";"
 ```
 
 ### 3.2 Supported Data Types
 In addition to integers, booleans, and strings, YARTBML supports arrays and hashmaps.
-
-### 3.3 Binding Arrays
-Arrays of integers can be bound to names using the following syntax:
-```
-<let_statement> ::= 
-	"let" <identifier> "=" "[" <array_elements> "]" ";"
-<array_elements> ::= <integer> ("," <integer>)*
-<array_elements> ::= <char> ("," <char>)*
-<array_elements> ::= <string> ("," <string>)*
-```
-
-\pagebreak
-
-### 3.4 Binding Values to Hashmaps
-Hashmaps, where values are associated with keys, can be bound to names as follows:
-```
-<let_statement> ::= 
-	"let" <identifier> "=" "{" <hash_pairs> "}" ";"
-<hash_pairs> ::= <hash_pair> ("," <hash_pair>)*
-<hash_pair> ::= <string> ":" <expression>
-```
 
 ### 3.5 Accessing Elements
 Elements in arrays and hashmaps are accessed using index expressions.
@@ -271,8 +249,61 @@ twice(addTwo, 2); // => 6
 # 5 REPL (Read Eval Print Loop)
 YARTBML uses a REPL to read input, send it to the interpreter for evaluation, print the result/output of the interpreter 
 
-\pagebreak
+# 5.1 CLI Tool
+YARTBML also has a CLI Tool to help interpret whole files of YARTBML code (.ybml is the file extension).
 
 # Parsing and Interpretation order
 YARTBML employs recursive descent for parsing, specifically utilizing the PRATT parsing algorithm to enhance parsing speed. A tree walker is then employed to interpret the Abstract Syntax Tree (AST) produced by the parser.
 
+# 6 Appendix - Complete EBNF Form
+
+```
+<program>                   ::= <statement-list>
+<statement-list>            ::= { <statement> }
+<statement>                 ::= <let-statement>
+                              | <return-statement>
+                              | <expression-statement>
+<let-statement>             ::= "let" <identifier> "=" <expression> ";"
+<return-statement>          ::= "return" <expression> ";"
+<expression-statement>      ::= <expression> ";"
+<block-statement>           ::= "{" <statement-list> "}"
+
+<expression>                ::= <equality-expression>
+<equality-expression>       ::= <comparative-expression> {("==" | "!=") <comparative-expression>}
+<comparative-expression>    ::= <additive-expression> {("<" | ">") <additive-expression>}
+<additive-expression>       ::= <multiplicative-expression> {("+" | "-") <multiplicative-expression>}
+<multiplicative-expression> ::= <prefix-expression> {("*" | "/") <prefix-expression>}
+<prefix-expression>         ::= ("-" | "!") <prefix-expression>
+                              | <postfix-expression>
+<postfix-expression>        ::= <primary-expression> {<call-postfix> | <index-postfix>}
+<call-postfix>              ::= "(" [<expression-list>] ")"
+<index-postfix>             ::= "[" <expression> "]"
+<primary-expression>        ::= <grouped-expression>
+                              | <if-expression>
+                              | <function>
+                              | <identifier>
+                              | <value>
+
+<prefix-expression>         ::= ("-" | "!") <expression>
+<grouped-expression>		::= "(" <expression> ")"
+<if-expression>             ::= "if" "(" <expression> ")" <block-statement> ["else" <block-statement>]
+<function>          		::= "fn" "(" [<parameter-list>] ")" <block-statement>
+<identifier>                ::= <alpha> { <alpha> | <digit> | "_" }
+<value>                     ::= <int>
+                              | <bool>
+                              | <string>
+                              | <array>
+                              | <hash>
+
+<int>                       ::= <digit> { <digit> }
+<digit>                     ::= "0..9"
+<alpha>                     ::= "a..zA..Z"
+<bool>                      ::= "true" | "false"
+<string>                    ::= """ { <~any valid non-quotation-marks character> } """
+<array>                     ::= "[" [<expression-list>] "]"
+<hash>                      ::= "{" [<key-value-pairs>] "}"
+<key-value-pairs>           ::= <expression> ":" <expression> { "," <expression> ":" <expression> }
+
+<expression-list>           ::= <expression> { "," <expression> }
+<parameter-list>            ::= <identifier> { "," <identifier> }
+```
