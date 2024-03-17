@@ -53,6 +53,8 @@ Booleans are true/false values
 <boolean> ::= "true" | "false"
 ```
 
+\pagebreak
+
 #### 2.24 Array Literals
 Arrays can contain sequences of either integers or strings.
 ```
@@ -196,6 +198,8 @@ YARTBML also supports higher-order functions, which are functions that take othe
 	"let" <identifier> "=" "fn" "(" <parameters> ")" <block_statement>
 <parameters> ::= <identifier> ("," <identifier>)*
 ```
+
+\pagebreak
 
 ### 3.10 Selection Sequences
 YARTBML supports control flow using the `if` keyword followed by the expression to evaluate then an optional `else`. If the value is `true` the preceding block statement is evaluated, if `false` the else statement is evaluated.
