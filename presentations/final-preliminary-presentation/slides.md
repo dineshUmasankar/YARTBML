@@ -125,7 +125,7 @@ Tree-Walking Interpreter using the AST (Abstract Syntax Tree)
 </v-clicks>
 
 ---
-layout: fact
+layout: center
 ---
 
 # Data Types In Action
