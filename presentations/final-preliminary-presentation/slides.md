@@ -333,3 +333,40 @@ image: docgen.png
 - Automated Interpreter Binary Release -> Dinesh Umasankar
 
 </v-clicks>
+
+---
+---
+
+# Developer Experience
+<br/>
+<v-clicks>
+
+- Syntax Highlighter -> Paul Jensen
+
+</v-clicks>
+
+<br/>
+
+<v-clicks>
+
+- **(FUTURE)** *Language Server Implementation (Autocomplete, Go-To Definition, In-Editor Documentation, etc.)*
+
+</v-clicks>
+
+---
+---
+
+# Future Aspirations
+<br/>
+<v-clicks>
+
+- Support for logical `&&` and `||` Operators
+- Support for `<=` and `>=` Operators
+- Support for `%` (modulo) Operator
+- Support for `++` and `--` Postfix Operators
+- Support for Floating Point Operations
+- Support for Macros
+- Support for Loops
+- Support for Regular Expressions
+
+</v-clicks>
