@@ -16,7 +16,7 @@ layout: intro
 
 <div class="mt-12">
   <span class="font-500">
-    By: Dinesh Umasankar, Joesph Porrino, Katherine Banis, Paul Jensen
+    By: Dinesh Umasankar, Joseph Porrino, Katherine Banis, Paul Jensen
   </span>
 </div>
 
@@ -139,7 +139,7 @@ let name = "YARTBML";       // Strings
 ```js
 // Each Team Member's Profile in a Hashmap
 let dinesh = {"name": "Dinesh Umasankar", classification: "Senior"};
-let joesph = {"name": "Joesph Porrino", classification: "Senior"};
+let joseph = {"name": "Joseph Porrino", classification: "Senior"};
 let katherine = {"name": "Katherine Banis", classification: "Senior"};
 let paul = {"name": "Paul Jensen", classification: "Senior"};
 
@@ -147,7 +147,7 @@ let dineshClassification = dinesh["classification"] // "Senior"
 ```
 ```js
 // Our team in an array
-let team = [dinesh, joesph, katherine, paul];
+let team = [dinesh, joseph, katherine, paul];
 let leader = team[0] // {"name": "Dinesh Umasankar", classification: "Senior"}
 ```
 ````
@@ -263,7 +263,7 @@ layout: statement
 <br/>
 Executable Interpreter that takes in flags to interpret whole `.ybml` code files
 
-Can be used in build automation tools. *(CI/CD)*
+Can be integrated with build-automation tools. *(CI/CD)*
 
 ---
 layout: statement
@@ -379,7 +379,7 @@ image: docgen.png
 <v-clicks>
 
 - Support for Import / Export Modules
-- Language Server Protocol Implementaiton (Autocomplete, Go-To Definition, In-Editor Documentation, etc.)
+- Language Server Protocol Implementation (Autocomplete, Go-To Definition, In-Editor Documentation, etc.)
 - Improve Error Reporting
 - Compile to WASM to allow for browser-based coding environment
 - Compile the code into a bytecode definition and compute via Custom Stack-Based Virtual Machine
