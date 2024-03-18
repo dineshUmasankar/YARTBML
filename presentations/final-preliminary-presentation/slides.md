@@ -52,6 +52,8 @@ Minimally Functional-Paradigm Inspired Language (Based on SMoL)
 
 <!--
 * SMoL (Standard Model of Languages) - Closures, Variables, Control Structure, Recursion, Functions
+
+Joe
 -->
 
 ---
@@ -60,7 +62,6 @@ layout: section
 
 # **Let's Prove It**
 
----
 ---
 
 # File Format
@@ -73,6 +74,13 @@ layout: section
 - Let's make an example fibonacci program.
 
 </v-clicks>
+
+<!--
+.ybml
+UTF-8
+
+Paul
+-->
 
 ---
 layout: section
@@ -99,6 +107,9 @@ puts(fibonacci(10)) // Displays "55".
 
 <!--
 Explain each highlighted section as it showcases various aspects of the language
+
+puts - print
+Dinesh
 -->
 
 ---
@@ -106,6 +117,10 @@ layout: section
 ---
 
 # **Core Language Principles**
+
+<!--
+Joe
+-->
 
 ---
 layout: statement
@@ -116,6 +131,8 @@ Pratt Parsing Technique (form of Recursive Descent)
 
 <!--
 Helpful for processing infix expressions using Pratt Parsing Technique
+
+Joe
 -->
 
 ---
@@ -124,6 +141,10 @@ layout: statement
 
 # Interpreter / Evaluator
 Tree-Walking Interpreter using the AST (Abstract Syntax Tree)
+
+<!--
+Joe
+-->
 
 ---
 
@@ -142,6 +163,8 @@ Tree-Walking Interpreter using the AST (Abstract Syntax Tree)
 <!--
 As you can see, the array element can accept objects of many different types.
 Same goes for hashmaps.
+
+Paul
 -->
 
 ---
@@ -172,7 +195,10 @@ let leader = team[0] // {"name": "Dinesh Umasankar", classification: "Senior"}
 ```
 ````
 
----
+<!--
+Paul
+-->
+
 ---
 
 # Functions
@@ -201,8 +227,12 @@ let message = greet("World");
 puts(message); // -> "Hello, World!"
 ```
 
+<!--
+Dinesh
+-->
+
 ---
----
+
 # Operators
 ## Traditional Arithmetic Operators w/ Precedence
 
@@ -226,6 +256,10 @@ puts(message); // -> "Hello, World!"
 - **(FUTURE)** *Logical Operator Support: `&&` and `||`*
 
 </v-clicks>
+
+<!--
+Joe
+-->
 
 ---
 layout: image-right
@@ -266,11 +300,19 @@ It discusses about how the memory management is relegated to our host language: 
 
 </v-clicks>
 
+<!--
+Dinesh
+-->
+
 ---
 layout: statement
 ---
 
 # Language Development Tools
+
+<!--
+Paul
+-->
 
 ---
 layout: statement
@@ -279,6 +321,10 @@ layout: statement
 # REPL
 ## Read-Eval-Print Loop
 Allows you to quickly test line-by-line code snippets in the terminal
+
+<!--
+Paul
+-->
 
 ---
 layout: statement
@@ -292,6 +338,8 @@ Can be integrated with build-automation tools. *(CI/CD)*
 
 <!--
 You can setup GitHub Runners and automated build tools to download the interpreter binary on every pull request and test the codebase by running the changed files through the interpreter in order to evaluate if YARTBML program works.
+
+Joe
 -->
 
 ---
@@ -310,6 +358,7 @@ VSCode will use TextMate Grammar which is based on the "Oniguruma" Dialect which
 Sublime Syntax Highlighting is defined through the same grammar, however has its own YAML style.
 
 NeoVim also supports TextMate Grammar but it has its own quirks when it comes to registering syntax highlighting.
+Paul
 -->
 
 ---
@@ -317,6 +366,10 @@ layout: section
 ---
 
 # **Team Responsibilities**
+
+<!--
+Dinesh
+-->
 
 ---
 layout: image-right
@@ -333,7 +386,10 @@ image: docgen.png
 
 </v-clicks>
 
----
+<!--
+Dinesh
+-->
+
 ---
 
 # Core Language
@@ -356,7 +412,10 @@ image: docgen.png
 
 </v-clicks>
 
----
+<!--
+Joe
+-->
+
 ---
 
 # Automated Quality Assurance Tools
@@ -371,7 +430,10 @@ image: docgen.png
 
 </v-clicks>
 
----
+<!--
+Dinesh
+-->
+
 ---
 
 # Developer Experience
@@ -389,6 +451,10 @@ image: docgen.png
 - **(FUTURE)** *Language Server Implementation (Autocomplete, Go-To Definition, In-Editor Documentation, etc.)*
 
 </v-clicks>
+
+<!--
+Paul
+-->
 
 ---
 
@@ -409,6 +475,8 @@ image: docgen.png
 
 <!--
 Easiest Aspirations that we could possibly reach as the implementation has been mostly thought out.
+
+Joe
 -->
 
 ---
@@ -428,6 +496,8 @@ Easiest Aspirations that we could possibly reach as the implementation has been 
 
 <!--
 Medium Difficulty of Aspirations that we could possibly do with moderate amounts of research accomplished.
+
+Paul
 -->
 
 ---
@@ -449,6 +519,8 @@ Hardest Difficulty of Aspirations that we could possibly do but will require maj
 Let Dinesh Talk about the differences of Concurrency Models.
 * Differences between syscalls on each architecture and each operating system's quirks
 * Differences between I/O (permission bits and file architectures between operating systems)
+
+Dinesh
 -->
 
 ---
