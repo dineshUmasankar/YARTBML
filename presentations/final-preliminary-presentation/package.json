@@ -5,7 +5,8 @@
   "scripts": {
     "build": "slidev build",
     "dev": "slidev --open",
-    "export": "slidev export"
+    "export": "slidev export",
+    "remote": "slidev --remote=YARTBML"
   },
   "dependencies": {
     "@slidev/cli": "^0.48.3",
@@ -13,5 +14,8 @@
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
     "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.42.1"
   }
 }
