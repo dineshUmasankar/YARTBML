@@ -27,6 +27,10 @@ layout: intro
   </a>
 </div>
 
+<!--
+Dinesh shall introduce everyone and the project title for our programming language
+-->
+
 ---
 layout: image-right
 transition: slide-left
@@ -45,6 +49,10 @@ Minimally Functional-Paradigm Inspired Language (Based on SMoL)
 - 🍕 Learnable in a lunch break
 
 </v-clicks>
+
+<!--
+* SMoL (Standard Model of Languages) - Closures, Variables, Control Structure, Recursion, Functions
+-->
 
 ---
 layout: section
@@ -89,6 +97,10 @@ let fibonacci = fn(x) {
 puts(fibonacci(10)) // Displays "55".
 ```
 
+<!--
+Explain each highlighted section as it showcases various aspects of the language
+-->
+
 ---
 layout: section
 ---
@@ -102,6 +114,10 @@ layout: statement
 # Parsing
 Pratt Parsing Technique (form of Recursive Descent)
 
+<!--
+Helpful for processing infix expressions using Pratt Parsing Technique
+-->
+
 ---
 layout: statement
 ---
@@ -109,7 +125,6 @@ layout: statement
 # Interpreter / Evaluator
 Tree-Walking Interpreter using the AST (Abstract Syntax Tree)
 
----
 ---
 
 # Data Types
@@ -123,6 +138,11 @@ Tree-Walking Interpreter using the AST (Abstract Syntax Tree)
 - Hashmaps: Key-value pairs, e.g., `{"name": "YARTBML", "isCool": true}`.
 
 </v-clicks>
+
+<!--
+As you can see, the array element can accept objects of many different types.
+Same goes for hashmaps.
+-->
 
 ---
 layout: center
@@ -223,7 +243,12 @@ image: golang.png
 
 </v-clicks>
 
----
+<!--
+Let dinesh take over this slide for explanation.
+
+It discusses about how the memory management is relegated to our host language: Go.
+-->
+
 ---
 
 # Built-In Functions
@@ -265,6 +290,10 @@ Executable Interpreter that takes in flags to interpret whole `.ybml` code files
 
 Can be integrated with build-automation tools. *(CI/CD)*
 
+<!--
+You can setup GitHub Runners and automated build tools to download the interpreter binary on every pull request and test the codebase by running the changed files through the interpreter in order to evaluate if YARTBML program works.
+-->
+
 ---
 layout: statement
 ---
@@ -274,6 +303,14 @@ layout: statement
 Code with confidence by being able to read you code in colors which provide context.
 
 Built for popular editors like: VSCode, Sublime*, NeoVim*
+
+<!--
+VSCode will use TextMate Grammar which is based on the "Oniguruma" Dialect which can be tested via Ruby's Regular Expression. The grammar will be written in a JSON Definition that will then have to be built into a VSCode Extension.
+
+Sublime Syntax Highlighting is defined through the same grammar, however has its own YAML style.
+
+NeoVim also supports TextMate Grammar but it has its own quirks when it comes to registering syntax highlighting.
+-->
 
 ---
 layout: section
@@ -354,7 +391,6 @@ image: docgen.png
 </v-clicks>
 
 ---
----
 
 # Future Aspirations
 <br/>
@@ -371,7 +407,10 @@ image: docgen.png
 
 </v-clicks>
 
----
+<!--
+Easiest Aspirations that we could possibly reach as the implementation has been mostly thought out.
+-->
+
 ---
 
 # Future Aspirations
@@ -387,7 +426,10 @@ image: docgen.png
 
 </v-clicks>
 
----
+<!--
+Medium Difficulty of Aspirations that we could possibly do with moderate amounts of research accomplished.
+-->
+
 ---
 
 # Future Aspirations
@@ -400,6 +442,14 @@ image: docgen.png
 - Language Branding Page (About, Install, Documentation, Community, Development)
 
 </v-clicks>
+
+<!--
+Hardest Difficulty of Aspirations that we could possibly do but will require major amounts of research and design decisions that could possibly be controversial.
+
+Let Dinesh Talk about the differences of Concurrency Models.
+* Differences between syscalls on each architecture and each operating system's quirks
+* Differences between I/O (permission bits and file architectures between operating systems)
+-->
 
 ---
 layout: fact
