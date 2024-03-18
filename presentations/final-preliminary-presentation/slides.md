@@ -370,3 +370,39 @@ image: docgen.png
 - Support for Regular Expressions
 
 </v-clicks>
+
+---
+---
+
+# Future Aspirations
+<br/>
+<v-clicks>
+
+- Support for Import / Export Modules
+- Language Server Protocol Implementaiton (Autocomplete, Go-To Definition, In-Editor Documentation, etc.)
+- Improve Error Reporting
+- Compile to WASM to allow for browser-based coding environment
+- Compile the code into a bytecode definition and compute via Custom Stack-Based Virtual Machine
+- Create Browser-Based Programming Tutorial
+
+</v-clicks>
+
+---
+---
+
+# Future Aspirations
+<br/>
+<v-clicks>
+
+- Support for Concurrency (Requires Design Decision & Thoughts)
+- Support for File I/O (Requires Design Decision & Thoughts)
+- Investigation & Support for Type Systems
+- Language Branding Page (About, Install, Documentation, Community, Development)
+
+</v-clicks>
+
+---
+layout: fact
+---
+
+# Thank You
