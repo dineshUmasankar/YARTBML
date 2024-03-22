@@ -1,9 +1,9 @@
 package token
 
-type TokenType String
+type TokenType string
 
 type Token struct {
-	Type TokenType
+	Type    TokenType
 	Literal string
 }
 
@@ -15,10 +15,10 @@ const (
 	// Identifiers + literals
 	IDENT = "IDENT" // add, foobar, x, y, ...
 	INT   = "INT"   // 123456
-	
-	//operators
-	ASSIGN  = "="
-	PLUS    = "+"
+
+	// operators
+	ASSIGN = "="
+	PLUS   = "+"
 
 	// Delimiters
 	COMMA     = ","
