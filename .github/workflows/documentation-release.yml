@@ -133,10 +133,7 @@ jobs:
           path: docs/dist/*
 
       - name: Git Commit Generated Documentation Artifacts
-        if: github.event_name == 'push'
-        run: |
-          git config --global user.name "Continuous Integration"
-          git config --global user.email "username@users.noreply.github.com"
-          git add docs/dist
-          git commit -m "Continuous Integration: Documentation Artifacts"
-          git push
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Documentation Artifacts
