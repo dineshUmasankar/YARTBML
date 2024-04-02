@@ -1,3 +1,3 @@
-module github.com/dineshUmasankar/YARTBML
+module YARTBML
 
 go 1.22.0
