@@ -10,6 +10,10 @@ on:
 jobs:
   gen_docs:
     runs-on: ubuntu-latest
+
+    permissions:
+      content: write
+
     steps:
       - uses: actions/checkout@v4
 
