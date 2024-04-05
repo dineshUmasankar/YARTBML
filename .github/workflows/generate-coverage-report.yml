@@ -1,0 +1,34 @@
+name: Code Coverage Report
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: ['src/**']
+
+  workflow_dispatch:
+
+jobs:
+  gen_coverage_metrics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+
+      - name: Generate Coverage Report
+        run: |
+          cd src
+          mkdir coverage
+          go test -coverprofile=coverage/c.out ./...
+          go tool cover -html=coverage/c.out -o coverage/coverage.html
+
+      - name: Upload Coverage Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/*
