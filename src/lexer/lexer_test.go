@@ -6,8 +6,7 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
-	input := 
-		`
+	input := `
 		let five = 5;
 		let ten = 10;
 		let add = fn(x, y) {
@@ -27,8 +26,8 @@ func TestNextToken(t *testing.T) {
 		10 != 9;
 		`
 	tests := []struct {
-	expectedType token.TokenType
-	expectedLiteral string
+		expectedType    token.TokenType
+		expectedLiteral string
 	}{
 		{token.LET, "let"},
 		{token.IDENT, "five"},
@@ -66,9 +65,9 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "ten"},
 		{token.RPAREN, ")"},
 		{token.SEMICOLON, ";"},
-		{token.BANG, "!"}, 
+		{token.BANG, "!"},
 		{token.MINUS, "-"},
-		{token.SLASH, "/"}, 
+		{token.SLASH, "/"},
 		{token.ASTERISK, "*"},
 		{token.INT, "5"},
 		{token.SEMICOLON, ";"},
@@ -76,10 +75,10 @@ func TestNextToken(t *testing.T) {
 		{token.LT, "<"},
 		{token.INT, "10"},
 		{token.GT, ">"},
-		{token.INT, "5"}, 
+		{token.INT, "5"},
 		{token.SEMICOLON, ";"},
 		{token.IF, "if"},
-		{token.LPAREN, "("}, 
+		{token.LPAREN, "("},
 		{token.INT, "5"},
 		{token.LT, "<"},
 		{token.INT, "10"},
@@ -104,11 +103,8 @@ func TestNextToken(t *testing.T) {
 		{token.INT, "9"},
 		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
-
-		10 == 10;
-		10 != 9;
 	}
-	
+
 	l := New(input)
 
 	for i, tt := range tests {
@@ -124,4 +120,3 @@ func TestNextToken(t *testing.T) {
 		}
 	}
 }
-

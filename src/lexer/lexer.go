@@ -15,17 +15,15 @@ func New(input string) *Lexer {
 	return l
 }
 
-
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
-	l.ch = 0
+		l.ch = 0
 	} else {
-	l.ch = l.input[l.readPosition]
+		l.ch = l.input[l.readPosition]
 	}
 	l.position = l.readPosition
 	l.readPosition += 1
 }
-	
 
 func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
@@ -134,6 +132,3 @@ func (l *Lexer) peekChar() byte {
 		return l.input[l.readPosition]
 	}
 }
-
-
-	

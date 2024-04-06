@@ -1,10 +1,10 @@
 package main
 
 import (
+	"YARTBML/repl"
 	"fmt"
 	"os"
 	"os/user"
-	"YARTBML/repl"
 )
 
 func main() {
@@ -12,8 +12,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-		fmt.Printf("Hello %s! This is the Monkey programming language!\n",
+	fmt.Printf("Hello %s! This is the YARTBML programming language!\n",
 		user.Username)
-		fmt.Printf("Feel free to type in commands\n")
-		repl.Start(os.Stdin, os.Stdout)
+	fmt.Printf("Feel free to type in commands\n")
+	repl.Start(os.Stdin, os.Stdout)
 }
