@@ -5,11 +5,12 @@
 package parser
 
 import (
+	"fmt"
+	"strconv"
+
 	"YARTBML/ast"
 	"YARTBML/lexer"
 	"YARTBML/token"
-	"fmt"
-	"strconv"
 )
 
 // Parses each token received from the lexer and
@@ -37,6 +38,8 @@ func New(l *lexer.Lexer) *Parser {
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
+	p.registerPrefix(token.BANG, p.parsePrefixExpression)
+	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 
 	// read two tokens, so curToken and peekToken are both set
 	// acts exactly like lexer's position and readPosition (for lookaheads)
@@ -173,6 +176,12 @@ func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
 	p.infixParseFns[tokenType] = fn
 }
 
+// Appends to Parser Instance's errors when a token has no assigned prefix parse function
+func (p *Parser) noPrefixParseFnError(t token.TokenType) {
+	msg := fmt.Sprintf("no prefix parse function for %s found", t)
+	p.errors = append(p.errors, msg)
+}
+
 // Parse Expression Statements with LOWEST operator precedence as we haven't
 // parsed anything yet and can't compare precedences
 func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
@@ -199,11 +208,30 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := p.prefixParseFns[p.curToken.Type]
 
 	if prefix == nil {
+		p.noPrefixParseFnError(p.curToken.Type)
 		return nil
 	}
 	leftExp := prefix()
 
 	return leftExp
+}
+
+// Builds a PrefixExpression AST node when a Prefix Operator is encountered.
+// When this is called, p.curToken is either of type token.BANG or token.MINUS.
+// In order to correctly parse a prefix expression, we need to consume more than one token.
+// As such, method advances the token(s) and calls parseExpression with the precedence of prefix operators
+// as the argument.
+func (p *Parser) parsePrefixExpression() ast.Expression {
+	expression := &ast.PrefixExpression{
+		Token:    p.curToken,
+		Operator: p.curToken.Literal,
+	}
+
+	p.nextToken()
+
+	expression.Right = p.parseExpression(PREFIX)
+
+	return expression
 }
 
 // Parses Identifer Statements

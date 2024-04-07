@@ -28,8 +28,9 @@ We will be using this AST (of statements and expressions) and apply Pratt Parsin
 package ast
 
 import (
-	"YARTBML/token"
 	"strings"
+
+	"YARTBML/token"
 )
 
 // Nodes are going to contain our language's construct of
@@ -201,6 +202,8 @@ func (es *ExpressionStatement) String() string {
 	return ""
 }
 
+// IntegerLiteral Node to represent Integer(s)
+// as an Expression Value-Type in our AST.
 type IntegerLiteral struct {
 	Token token.Token
 	Value int64
@@ -219,4 +222,38 @@ func (il *IntegerLiteral) TokenLiteral() string {
 // Implementing the Node interface on Integer Literal
 func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
+}
+
+// Represents Expression as a Prefix Operation containing
+// Operator: "-" or "!" and Right: Expression (numbers / identifiers / etc.)
+type PrefixExpression struct {
+	Token    token.Token // The prefix token, e.g. !
+	Operator string      // String that's going to contain either "-" or "!"
+	Right    Expression  // Expression to apply operator upon
+}
+
+// Implementing Expression interface on PrefixExpression
+func (pe *PrefixExpression) expressionNode() {}
+
+// Implementing Node interface on PrefixExpression
+func (pe *PrefixExpression) TokenLiteral() string {
+	return pe.Token.Literal
+}
+
+// String representation of the Prefix Expression
+// Helps us debug and showcase the operator precedence within
+// a prefix epxression and the flow of operations being applied.
+// This should generate our input, but with more parenthesis showcasing
+// the operator precedence understood within our application, specifically
+// within a PrefixExpression. Implementing the Node interface on
+// PrefixExpression.
+func (pe *PrefixExpression) String() string {
+	var sb strings.Builder
+
+	sb.WriteString("(")
+	sb.WriteString(pe.Operator)
+	sb.WriteString(pe.Right.String())
+	sb.WriteString(")")
+
+	return sb.String()
 }
