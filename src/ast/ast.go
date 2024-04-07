@@ -102,3 +102,17 @@ func (i *Identifier) expressionNode() {}
 func (i *Identifier) TokenLiteral() string {
 	return i.Token.Literal
 }
+
+// Return Statements consist solely of the keyword `return` and an expression.
+type ReturnStatement struct {
+	Token       token.Token // token.RETURN token
+	ReturnValue Expression
+}
+
+// Implementing Statement interface on ReturnStatement
+func (rs *ReturnStatement) statementNode() {}
+
+// Implementing the Node interface on ReturnStatement
+func (rs *ReturnStatement) TokenLiteral() string {
+	return rs.Token.Literal
+}
