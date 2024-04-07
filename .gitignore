@@ -22,3 +22,6 @@ go.work
 
 presentations/**/node_modules
 presentations/**/dist
+
+# IntelliJ Editor files
+.idea/
