@@ -28,9 +28,8 @@ We will be using this AST (of statements and expressions) and apply Pratt Parsin
 package ast
 
 import (
-	"strings"
-
 	"YARTBML/token"
+	"strings"
 )
 
 // Nodes are going to contain our language's construct of
@@ -128,7 +127,7 @@ type Identifier struct {
 	Value string
 }
 
-// Implementing the Expression on an Identifer, as when the
+// Implementing the Expression interace on an Identifer, as when the
 // identifier is referenced in other parts of a program, it
 // will produce a value.
 func (i *Identifier) expressionNode() {}
@@ -193,10 +192,31 @@ func (es *ExpressionStatement) TokenLiteral() string {
 // String representation of the ExpressionStatement AST Node
 // Essentially builds back the input that was given from the AST Node Representation.
 // Should essentially output the input program's expression statement.
+// Implementing the Node interface on Expression Statement
 func (es *ExpressionStatement) String() string {
 	if es.Expression != nil {
 		return es.Expression.String()
 	}
 
 	return ""
+}
+
+type IntegerLiteral struct {
+	Token token.Token
+	Value int64
+}
+
+// Implementing Expression interface on IntegerLiteral
+// Integers are a return value.
+func (il *IntegerLiteral) expressionNode() {}
+
+// Implementing the Node interface on Integer Literal
+func (il *IntegerLiteral) TokenLiteral() string {
+	return il.Token.Literal
+}
+
+// String representation of the Expression Node
+// Implementing the Node interface on Integer Literal
+func (il *IntegerLiteral) String() string {
+	return il.Token.Literal
 }

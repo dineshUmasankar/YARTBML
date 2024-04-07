@@ -5,11 +5,11 @@
 package parser
 
 import (
-	"fmt"
-
 	"YARTBML/ast"
 	"YARTBML/lexer"
 	"YARTBML/token"
+	"fmt"
+	"strconv"
 )
 
 // Parses each token received from the lexer and
@@ -36,6 +36,7 @@ func New(l *lexer.Lexer) *Parser {
 
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
+	p.registerPrefix(token.INT, p.parseIntegerLiteral)
 
 	// read two tokens, so curToken and peekToken are both set
 	// acts exactly like lexer's position and readPosition (for lookaheads)
@@ -122,6 +123,21 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	}
 
 	return stmt
+}
+
+// Parse Integer Literals into IntegerLiteral Node
+func (p *Parser) parseIntegerLiteral() ast.Expression {
+	literal := &ast.IntegerLiteral{Token: p.curToken}
+
+	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
+	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as integer", p.curToken.Literal)
+		p.errors = append(p.errors, msg)
+		return nil
+	}
+
+	literal.Value = value
+	return literal
 }
 
 // Define the operator precedence within our language
