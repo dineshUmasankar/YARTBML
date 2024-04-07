@@ -1,5 +1,7 @@
 package parser
 
+// TODO: Mock / Stub out the Lexer
+
 import (
 	"YARTBML/ast"
 	"YARTBML/lexer"

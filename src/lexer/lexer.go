@@ -1,3 +1,7 @@
+// Package lexer provides functionality to tokenize input strings into tokens in the YARTBML Programming Language.
+// The lexer (lexical analyzer) reads the input string character by character, identifying tokens such as identifiers,
+// keywords, operators, and literals, and creating corresponding tokens.
+// Each token has a type and a literal value associated with it.
 package lexer
 
 import "YARTBML/token"
@@ -9,12 +13,15 @@ type Lexer struct {
 	ch           byte // current char under examination
 }
 
+// Initialize a new Lexer with the given program contents as a string input.
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
 	return l
 }
 
+// Reads the next character from the input string
+// and advances the lexer's position.
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
@@ -25,10 +32,12 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+// Create a new token with the given `TokenType` and character.
 func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
+// Returns the NextToken from the input string (program contents).
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	l.skipWhitespace()
@@ -95,6 +104,9 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
+// When a series of letters are encountered, the assumption
+// is that unless if it is a keyword, then it reads it as an
+// identifier token.
 func (l *Lexer) readIdentifier() string {
 	position := l.position
 	for isLetter(l.ch) {
@@ -103,6 +115,9 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
+// When a series of numbers are encountered, the assumption
+// is that a number literal has been encountered and returns
+// a number literal.
 func (l *Lexer) readNumber() string {
 	position := l.position
 	for isDigit(l.ch) {
@@ -111,20 +126,25 @@ func (l *Lexer) readNumber() string {
 	return l.input[position:l.position]
 }
 
+// Verifies if a given character is within this regex: [a-zA-Z_]
 func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
+// Verifies if a given cahracter is within this regex: [0-9]
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }
 
+// Consume Whitespace equivalent method (including carriage return and linefeed)
+// as our language isn't whitespace sensitive.
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
 	}
 }
 
+// Returns the next character in the input string without advancing the lexer.
 func (l *Lexer) peekChar() byte {
 	if l.readPosition >= len(l.input) {
 		return 0
