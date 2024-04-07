@@ -28,6 +28,8 @@ We will be using this AST (of statements and expressions) and apply Pratt Parsin
 package ast
 
 import (
+	"strings"
+
 	"YARTBML/token"
 )
 
@@ -39,6 +41,7 @@ import (
 // for debugging purposes.
 type Node interface {
 	TokenLiteral() string
+	String() string // helpful for debugging / comparing w/ other AST nodes (useful for tests!)
 }
 
 // Statement don't produce a value but represents an object identifier that
@@ -60,12 +63,25 @@ type Program struct {
 	Statements []Statement
 }
 
+// Returns root node as *ast.Program as long program has statements.
 func (p *Program) TokenLiteral() string {
 	if len(p.Statements) > 0 {
 		return p.Statements[0].TokenLiteral()
 	} else {
 		return ""
 	}
+}
+
+// Creates a buffer & writes return value of each statement's String() method
+// Returns the buffer as a string.
+func (p *Program) String() string {
+	var sb strings.Builder
+
+	for _, s := range p.Statements {
+		sb.WriteString(s.String())
+	}
+
+	return sb.String()
 }
 
 // Represents a Let "Statement" within our AST to indicate an identifier
@@ -83,6 +99,25 @@ func (ls *LetStatement) statementNode() {}
 // Implementing the Node interface on LetStatement
 func (ls *LetStatement) TokenLiteral() string {
 	return ls.Token.Literal
+}
+
+// String representation of the LetStatement AST Node
+// Essentially builds back the input that was given from the AST Node Representation.
+// Should essentially output the input program's let statement.
+func (ls *LetStatement) String() string {
+	var sb strings.Builder
+
+	sb.WriteString(ls.TokenLiteral() + " ")
+	sb.WriteString(ls.Name.String())
+	sb.WriteString(" = ")
+
+	if ls.Value != nil {
+		sb.WriteString(ls.Value.String())
+	}
+
+	sb.WriteString(";")
+
+	return sb.String()
 }
 
 // Holds identifier of the binding in the [LetStatement]
@@ -103,6 +138,13 @@ func (i *Identifier) TokenLiteral() string {
 	return i.Token.Literal
 }
 
+// String representation of the IdentifierStatement AST Node
+// Essentially builds back the input that was given from the AST Node Representation.
+// Should essentially output the input program's identifer statement.
+func (i *Identifier) String() string {
+	return i.Value
+}
+
 // Return Statements consist solely of the keyword `return` and an expression.
 type ReturnStatement struct {
 	Token       token.Token // token.RETURN token
@@ -115,4 +157,46 @@ func (rs *ReturnStatement) statementNode() {}
 // Implementing the Node interface on ReturnStatement
 func (rs *ReturnStatement) TokenLiteral() string {
 	return rs.Token.Literal
+}
+
+// String representation of the ReturnStatement AST Node
+// Essentially builds back the input that was given from the AST Node Representation.
+// Should essentially output the input program's return statement.
+func (rs *ReturnStatement) String() string {
+	var sb strings.Builder
+
+	sb.WriteString(rs.TokenLiteral() + " ")
+
+	if rs.ReturnValue != nil {
+		sb.WriteString(rs.ReturnValue.String())
+	}
+
+	sb.WriteString(";")
+
+	return sb.String()
+}
+
+// Expression Stament: A statement that solely consists of one expression.
+type ExpressionStatement struct {
+	Token      token.Token // First token of the expression
+	Expression Expression
+}
+
+// Implementing Statement interface on ExpressionStatement
+func (es *ExpressionStatement) statementNode() {}
+
+// Implementing the Node interface on ExpressionStatement
+func (es *ExpressionStatement) TokenLiteral() string {
+	return es.Token.Literal
+}
+
+// String representation of the ExpressionStatement AST Node
+// Essentially builds back the input that was given from the AST Node Representation.
+// Should essentially output the input program's expression statement.
+func (es *ExpressionStatement) String() string {
+	if es.Expression != nil {
+		return es.Expression.String()
+	}
+
+	return ""
 }
