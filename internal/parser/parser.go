@@ -5,12 +5,11 @@
 package parser
 
 import (
-	"fmt"
-	"strconv"
-
 	"YARTBML/ast"
 	"YARTBML/lexer"
 	"YARTBML/token"
+	"fmt"
+	"strconv"
 )
 
 // Parses each token received from the lexer and
@@ -81,8 +80,6 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.LET:
 		return p.parseLetStatement()
-	case token.RETURN:
-		return p.parseReturnStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
 	default:
