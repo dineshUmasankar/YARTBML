@@ -5,11 +5,12 @@
 package parser
 
 import (
+	"fmt"
+	"strconv"
+
 	"YARTBML/ast"
 	"YARTBML/lexer"
 	"YARTBML/token"
-	"fmt"
-	"strconv"
 )
 
 // Parses each token received from the lexer and
@@ -54,6 +55,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.NOT_EQ, p.parseInfixExpression)
 	p.registerInfix(token.LT, p.parseInfixExpression)
 	p.registerInfix(token.GT, p.parseInfixExpression)
+	p.registerInfix(token.LPAREN, p.parseCallExpression)
 
 	// read two tokens, so curToken and peekToken are both set
 	// acts exactly like lexer's position and readPosition (for lookaheads)
@@ -195,6 +197,7 @@ var precedences = map[token.TokenType]int{
 	token.MINUS:    SUM,
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
+	token.LPAREN:   CALL,
 }
 
 // Returns the precedence associated with the peekToken of the Parser
@@ -468,6 +471,7 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 }
 
 // Parse Function Literal Parameters as they are a series of identifiers.
+// Example: add(x, y, z) -> x, y, z are all identifiers
 func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 	identifiers := []*ast.Identifier{}
 
@@ -497,6 +501,49 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 	}
 
 	return identifiers
+}
+
+// Parses whenever an identifer is being invoked as a function
+// We view Call Expressions as an infix operation, as it relies on the LPAREN `(`
+// being in-between an identifier and a set of arguments
+//
+//	add(2, 3)
+//	// ^ <- In between `add` identifier and series of arguments
+//
+// As you can see above it's practically an infix expression with a left being an
+// identifier and the right being the list of arguments.
+func (p *Parser) parseCallExpression(function ast.Expression) ast.Expression {
+	exp := &ast.CallExpression{Token: p.curToken, Function: function}
+	exp.Arguments = p.parseCallArguments()
+	return exp
+}
+
+// Parses the argument list that is being invoked within an CallExpression
+// or rather the arguments being passed to a function when it is being invoked.
+func (p *Parser) parseCallArguments() []ast.Expression {
+	args := []ast.Expression{}
+
+	// Indicates we are the end of arguments being passed into a function being invoked.
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return args
+	}
+
+	p.nextToken()
+	args = append(args, p.parseExpression(LOWEST))
+
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken() // curToken: token.COMMA | peekToken: argument
+		p.nextToken() // curToken: argument | peekToken: comma or RPAREN (ideally)
+
+		args = append(args, p.parseExpression(LOWEST))
+	}
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return args
 }
 
 // Parses Identifer Statements
