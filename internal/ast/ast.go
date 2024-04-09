@@ -28,9 +28,8 @@ We will be using this AST (of statements and expressions) and apply Pratt Parsin
 package ast
 
 import (
-	"strings"
-
 	"YARTBML/token"
+	"strings"
 )
 
 // Nodes are going to contain our language's construct of
@@ -329,6 +328,82 @@ func (ie *InfixExpression) String() string {
 	sb.WriteString(" " + ie.Operator + " ")
 	sb.WriteString(ie.Right.String())
 	sb.WriteString(")")
+
+	return sb.String()
+}
+
+// Represents a series of statements that are executed sequentially.
+// Similar to a program as a program is the same concept.
+type BlockStatement struct {
+	Token      token.Token // the { token
+	Statements []Statement
+}
+
+// Implementing Expression interface on BlockStatement
+func (bs *BlockStatement) expressionNode() {}
+
+// Implementing Node interface on BlockStatement
+func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
+
+// String representation of the series of statements within a block statement
+// Implementing Node interface on BlockStatement
+func (bs *BlockStatement) String() string {
+	var sb strings.Builder
+
+	for _, s := range bs.Statements {
+		sb.WriteString(s.String())
+	}
+
+	return sb.String()
+}
+
+// If Expressions are represented as the following definition:
+//
+//	if (<test_condition>) <then_path> else <else_path>
+//
+//	if (x > y) {
+//		return x;
+//	} else {
+//		return y;
+//	}
+//
+// The else is optional and can be left out as shown here
+//
+//	if (x > y) {
+//		return x;
+//	}
+//
+// if-else conditionals are expressions, which means they produce a value.
+//
+//	let foobar = if (x > y) { x } else { y };
+//
+// The ThenPath and ElsePath are Block Statements, which are just a series of statements (just like programs).
+type IfExpression struct {
+	Token         token.Token // The `if` token
+	TestCondition Expression
+	ThenPath      *BlockStatement
+	ElsePath      *BlockStatement
+}
+
+// Implementing Expression interface on IfExpression
+func (ie *IfExpression) expressionNode() {}
+
+// Implementing Node interface on IfExpression
+func (ie *IfExpression) TokenLiteral() string { return ie.Token.Literal }
+
+// String representation of an If Expression
+func (ie *IfExpression) String() string {
+	var sb strings.Builder
+
+	sb.WriteString("if")
+	sb.WriteString(ie.TestCondition.String())
+	sb.WriteString(" ")
+	sb.WriteString(ie.ThenPath.String())
+
+	if ie.ElsePath != nil {
+		sb.WriteString("else ")
+		sb.WriteString(ie.ElsePath.String())
+	}
 
 	return sb.String()
 }
