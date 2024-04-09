@@ -28,9 +28,8 @@ We will be using this AST (of statements and expressions) and apply Pratt Parsin
 package ast
 
 import (
-	"strings"
-
 	"YARTBML/token"
+	"strings"
 )
 
 // Nodes are going to contain our language's construct of
