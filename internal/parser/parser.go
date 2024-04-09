@@ -44,6 +44,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.FALSE, p.parseBooleanLiteral)
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseIfExpression)
+	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -424,6 +425,79 @@ func (p *Parser) parseIfExpression() ast.Expression {
 	}
 
 	return expression
+}
+
+// Parse Function Literals
+// Functions are defined with the keyword `fn`, followed by a list of parameters,
+// followed by a block statement, which is the function's body, that gets executed when
+// the function is called. Below is a few examples.
+//
+//	fn <parameters> <block statement>
+//
+//	// Multiple Parameters via list of identifiers (comma-separated and surrounded by parenthesis)
+//	(<parameters> = <parameter one>, <parameter two>, <paramter three>, ...)
+//
+//	fn() {
+//		return foobar + barfoo;
+//	}
+//
+//	let myFunction = fn (x, y) { return x + y }
+//
+//	fn () {
+//		return fn(x, y) { return x > y; };
+//	}
+//
+// As you can see in the examples above, the `myFunction` variable is able to store
+// the function literal as an expression, which can be invoked later by myFunction(x, y).
+// You can also use a function literal as an argument when calling another function: myFunc(x, y, fn(x, y) { return x > y; });
+func (p *Parser) parseFunctionLiteral() ast.Expression {
+	literal := &ast.FunctionLiteral{Token: p.curToken}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	literal.Parameters = p.parseFunctionParameters()
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	literal.Body = p.parseBlockStatement()
+
+	return literal
+}
+
+// Parse Function Literal Parameters as they are a series of identifiers.
+func (p *Parser) parseFunctionParameters() []*ast.Identifier {
+	identifiers := []*ast.Identifier{}
+
+	// No identifiers aka fn ()
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return identifiers
+	}
+
+	p.nextToken()
+
+	ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	identifiers = append(identifiers, ident)
+
+	// While there is a comma indicating another identifier, keep parsing identifiers
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken() // Cur Token: Comma | Peek Token: Identifier
+		p.nextToken() // Cur Token: Identifier | Peek Token: Comma or RParen (ideally)
+		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		identifiers = append(identifiers, ident)
+	}
+
+	// At this point, we should have finished all identifiers within function definition
+	// and at the peekToken should be closing `)`
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return identifiers
 }
 
 // Parses Identifer Statements
