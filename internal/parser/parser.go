@@ -5,12 +5,11 @@
 package parser
 
 import (
-	"fmt"
-	"strconv"
-
 	"YARTBML/ast"
 	"YARTBML/lexer"
 	"YARTBML/token"
+	"fmt"
+	"strconv"
 )
 
 // Parses each token received from the lexer and
@@ -43,6 +42,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.TRUE, p.parseBooleanLiteral)
 	p.registerPrefix(token.FALSE, p.parseBooleanLiteral)
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
+	p.registerPrefix(token.IF, p.parseIfExpression)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -357,6 +357,72 @@ func (p *Parser) parseGroupedExpression() ast.Expression {
 	}
 
 	return exp
+}
+
+// Parses a series of statements found between `{}`
+// Each statement is parsed sequentially and typically used within the if-else conditionals.
+// Here is an example of block statements:
+//
+//	{
+//		let x = 5;
+//		let y = 10;
+//	}
+//
+// As you can see above, the block has a series of statements that will be evaluated specifically,
+// within its scope later down the road.
+func (p *Parser) parseBlockStatement() *ast.BlockStatement {
+	block := &ast.BlockStatement{Token: p.curToken}
+	block.Statements = []ast.Statement{}
+
+	p.nextToken()
+
+	for !p.curTokenIs(token.RBRACE) && !p.curTokenIs(token.EOF) {
+		stmt := p.parseStatement()
+
+		if stmt != nil {
+			block.Statements = append(block.Statements, stmt)
+		}
+
+		p.nextToken()
+	}
+
+	return block
+}
+
+// Parses If Conditions, wher else branches are optional within our language
+// Each If statement is parsed as the following: if (<testCondition>) { <thenPath> } else { <elsePath> }
+func (p *Parser) parseIfExpression() ast.Expression {
+	expression := &ast.IfExpression{Token: p.curToken}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	p.nextToken()
+	expression.TestCondition = p.parseExpression(LOWEST)
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	expression.ThenPath = p.parseBlockStatement()
+
+	// Else is optional so we peek if it exists
+	if p.peekTokenIs(token.ELSE) {
+		p.nextToken()
+
+		if !p.expectPeek(token.LBRACE) {
+			return nil
+		}
+
+		expression.ElsePath = p.parseBlockStatement()
+	}
+
+	return expression
 }
 
 // Parses Identifer Statements
