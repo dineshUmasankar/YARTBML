@@ -5,11 +5,12 @@
 package parser
 
 import (
+	"fmt"
+	"strconv"
+
 	"YARTBML/ast"
 	"YARTBML/lexer"
 	"YARTBML/token"
-	"fmt"
-	"strconv"
 )
 
 // Parses each token received from the lexer and
