@@ -42,6 +42,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 	p.registerPrefix(token.TRUE, p.parseBooleanLiteral)
 	p.registerPrefix(token.FALSE, p.parseBooleanLiteral)
+	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -293,7 +294,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 }
 
 // Builds a PrefixExpression AST node when a Prefix Operator is encountered.
-// When this is called, p.curToken is either of type token.BANG or token.MINUS.
+// When this is called, p.curToken is either of type token.BANG or token.MINUS. (!true or -5)
 // In order to correctly parse a prefix expression, we need to consume more than one token.
 // As such, method advances the token(s) and calls parseExpression with the precedence of prefix operators
 // as the argument.
@@ -316,6 +317,19 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 // Builds a InfixExpression AST node when an Infix Operator is encountered.
 // When this is called, it usually means the p.curToken is the left expression and
 // the peek ahead is the infix operator.
+// Here are some examples of infix expresions:
+//
+//	5 + 5;
+//	5 - 5;
+//	5 * 5;
+//	5 / 5;
+//	5 > 5;
+//	5 < 5;
+//	5 == 5;
+//	5 != 5;
+//
+// These infix expressions also represent all of the arithmetic operations we can do in our
+// language.
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	// Tracing for Expressions - Useful for debugging
 	// defer untrace(trace("parseInfixExpression"))
@@ -330,6 +344,19 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	expression.Right = p.parseExpression(precedence)
 
 	return expression
+}
+
+// A Grouped Expression is when parentheses are used to influence an expression's precedence
+// therefore affecting the order in which they are evaluated in their context. Example: (5 + 5) * 2
+func (p *Parser) parseGroupedExpression() ast.Expression {
+	p.nextToken()
+
+	exp := p.parseExpression(LOWEST)
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return exp
 }
 
 // Parses Identifer Statements
