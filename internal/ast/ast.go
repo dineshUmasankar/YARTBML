@@ -407,3 +407,59 @@ func (ie *IfExpression) String() string {
 
 	return sb.String()
 }
+
+// Functions are defined with the keyword `fn`, followed by a list of parameters,
+// followed by a block statement, which is the function's body, that gets executed when
+// the function is called. Below is a few examples.
+//
+//	fn <parameters> <block statement>
+//
+//	// Multiple Parameters via list of identifiers (comma-separated and surrounded by parenthesis)
+//	(<parameters> = <parameter one>, <parameter two>, <paramter three>, ...)
+//
+//	fn() {
+//		return foobar + barfoo;
+//	}
+//
+//	let myFunction = fn (x, y) { return x + y }
+//
+//	fn () {
+//		return fn(x, y) { return x > y; };
+//	}
+//
+// As you can see in the examples above, the `myFunction` variable is able to store
+// the function literal as an expression, which can be invoked later by myFunction(x, y).
+// You can also use a function literal as an argument when calling another function: myFunc(x, y, fn(x, y) { return x > y; });
+type FunctionLiteral struct {
+	Token      token.Token // The `fn` token
+	Parameters []*Identifier
+	Body       *BlockStatement
+}
+
+// Implementing Expression interface on FunctionLiteral
+func (fl *FunctionLiteral) expressionNode() {}
+
+// Implementing Node interface on FunctionLiteral
+func (fl *FunctionLiteral) TokenLiteral() string {
+	return fl.Token.Literal
+}
+
+// String representation of the FunctionLiteral
+// Implementing Node interface on Function Literal
+func (fl *FunctionLiteral) String() string {
+	var sb strings.Builder
+
+	params := []string{}
+
+	for _, p := range fl.Parameters {
+		params = append(params, p.String())
+	}
+
+	sb.WriteString(fl.TokenLiteral())
+	sb.WriteString("(")
+	sb.WriteString(strings.Join(params, ", "))
+	sb.WriteString(") ")
+	sb.WriteString(fl.Body.String())
+
+	return sb.String()
+}
