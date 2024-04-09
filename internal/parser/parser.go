@@ -140,6 +140,9 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 
 // Parse Integer Literals into IntegerLiteral Node
 func (p *Parser) parseIntegerLiteral() ast.Expression {
+	// Tracing for Expressions - Useful for debugging
+	// defer untrace(trace("parseIntegerLiteral"))
+
 	literal := &ast.IntegerLiteral{Token: p.curToken}
 
 	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
@@ -227,6 +230,9 @@ func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 // Parse Expression Statements with LOWEST operator precedence as we haven't
 // parsed anything yet and can't compare precedences
 func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	// Tracing for Expressions - Useful for debugging
+	// defer untrace(trace("parseExpressionStatement"))
+
 	// Build Expression Node
 	stmt := &ast.ExpressionStatement{Token: p.curToken}
 
@@ -246,6 +252,9 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 // the current Token Type in the prefix position, if we do, then call its parsing prefix function.
 // Otherwise, return nil.
 func (p *Parser) parseExpression(precedence int) ast.Expression {
+	// Tracing for Expressions - Useful for debugging
+	// defer untrace(trace("parseExpression"))
+
 	prefix := p.prefixParseFns[p.curToken.Type]
 
 	if prefix == nil {
@@ -275,6 +284,9 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 // As such, method advances the token(s) and calls parseExpression with the precedence of prefix operators
 // as the argument.
 func (p *Parser) parsePrefixExpression() ast.Expression {
+	// Tracing for Expressions - Useful for debugging
+	// defer untrace(trace("parsePrefixExpression"))
+
 	expression := &ast.PrefixExpression{
 		Token:    p.curToken,
 		Operator: p.curToken.Literal,
@@ -291,6 +303,8 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 // When this is called, it usually means the p.curToken is the left expression and
 // the peek ahead is the infix operator.
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	// Tracing for Expressions - Useful for debugging
+	// defer untrace(trace("parseInfixExpression"))
 	expression := &ast.InfixExpression{
 		Token:    p.curToken,
 		Operator: p.curToken.Literal,
