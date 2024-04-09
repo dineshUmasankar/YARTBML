@@ -223,6 +223,29 @@ func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
 }
 
+// BooleanLiteral Node to represent Boolean(s)
+// as an Expression Value-Type in our AST
+// Examples are `true` and `false`
+type BooleanLiteral struct {
+	Token token.Token // The boolean token(s), e.g. `true` / `false`
+	Value bool
+}
+
+// Implementing the Expression interface on Boolean Literal
+// Booleans are a return value.
+func (b *BooleanLiteral) expressionNode() {}
+
+// Implementing the Node interface on Boolean Literal
+func (b *BooleanLiteral) TokenLiteral() string {
+	return b.Token.Literal
+}
+
+// String representation of the Expression Node
+// Implementing the Node interface on Boolean Literal
+func (b *BooleanLiteral) String() string {
+	return b.Token.Literal
+}
+
 // Represents Expression as a Prefix Operation containing
 // Operator: "-" or "!" and Right: Expression (numbers / identifiers / etc.)
 type PrefixExpression struct {
