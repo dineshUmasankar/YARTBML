@@ -5,11 +5,12 @@
 package parser
 
 import (
+	"fmt"
+	"strconv"
+
 	"YARTBML/ast"
 	"YARTBML/lexer"
 	"YARTBML/token"
-	"fmt"
-	"strconv"
 )
 
 // Parses each token received from the lexer and
@@ -39,6 +40,16 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
 	p.registerPrefix(token.BANG, p.parsePrefixExpression)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
+
+	p.infixParseFns = make(map[token.TokenType]infixParseFn)
+	p.registerInfix(token.PLUS, p.parseInfixExpression)
+	p.registerInfix(token.MINUS, p.parseInfixExpression)
+	p.registerInfix(token.SLASH, p.parseInfixExpression)
+	p.registerInfix(token.ASTERISK, p.parseInfixExpression)
+	p.registerInfix(token.EQ, p.parseInfixExpression)
+	p.registerInfix(token.NOT_EQ, p.parseInfixExpression)
+	p.registerInfix(token.LT, p.parseInfixExpression)
+	p.registerInfix(token.GT, p.parseInfixExpression)
 
 	// read two tokens, so curToken and peekToken are both set
 	// acts exactly like lexer's position and readPosition (for lookaheads)
@@ -155,6 +166,38 @@ const (
 	CALL        // myFunction(x)
 )
 
+// Maps each token to the appropriate precedence level when being parsed as an infix / prefix expression
+var precedences = map[token.TokenType]int{
+	token.EQ:       EQUALS,
+	token.NOT_EQ:   EQUALS,
+	token.LT:       LESSGREATER,
+	token.GT:       LESSGREATER,
+	token.PLUS:     SUM,
+	token.MINUS:    SUM,
+	token.SLASH:    PRODUCT,
+	token.ASTERISK: PRODUCT,
+}
+
+// Returns the precedence associated with the peekToken of the Parser
+// Default to LOWEST precedence when a precedence level isn't found for the p.peekToken
+func (p *Parser) peekPrecedence() int {
+	if p, ok := precedences[p.peekToken.Type]; ok {
+		return p
+	}
+
+	return LOWEST
+}
+
+// Returns the precedence associated with the current Token being looked at by the Parser
+// Default to LOWEST precedence when a precedence level isn't found for the p.curToken
+func (p *Parser) curPrecedence() int {
+	if p, ok := precedences[p.curToken.Type]; ok {
+		return p
+	}
+
+	return LOWEST
+}
+
 // Pratt Parsing main idea is the association of parsing function with
 // token types. Whenever this tokenType is encountered, the appropriate
 // parsing function is invoked to parse the appropriate expression.
@@ -201,8 +244,7 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 
 // As of right now, we check if we have a parsing function associated with
 // the current Token Type in the prefix position, if we do, then call its parsing prefix function.
-// Otherwise, return nil
-// TODO: Infix & Operator Precedence
+// Otherwise, return nil.
 func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := p.prefixParseFns[p.curToken.Type]
 
@@ -211,6 +253,18 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 		return nil
 	}
 	leftExp := prefix()
+
+	for !p.peekTokenIs(token.SEMICOLON) && precedence < p.peekPrecedence() {
+		infix := p.infixParseFns[p.peekToken.Type]
+
+		if infix == nil {
+			return leftExp
+		}
+
+		p.nextToken()
+
+		leftExp = infix(leftExp)
+	}
 
 	return leftExp
 }
@@ -229,6 +283,23 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 	p.nextToken()
 
 	expression.Right = p.parseExpression(PREFIX)
+
+	return expression
+}
+
+// Builds a InfixExpression AST node when an Infix Operator is encountered.
+// When this is called, it usually means the p.curToken is the left expression and
+// the peek ahead is the infix operator.
+func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	expression := &ast.InfixExpression{
+		Token:    p.curToken,
+		Operator: p.curToken.Literal,
+		Left:     left,
+	}
+
+	precedence := p.curPrecedence()
+	p.nextToken()
+	expression.Right = p.parseExpression(precedence)
 
 	return expression
 }

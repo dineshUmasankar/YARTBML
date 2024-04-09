@@ -28,9 +28,8 @@ We will be using this AST (of statements and expressions) and apply Pratt Parsin
 package ast
 
 import (
-	"strings"
-
 	"YARTBML/token"
+	"strings"
 )
 
 // Nodes are going to contain our language's construct of
@@ -242,7 +241,7 @@ func (pe *PrefixExpression) TokenLiteral() string {
 
 // String representation of the Prefix Expression
 // Helps us debug and showcase the operator precedence within
-// a prefix epxression and the flow of operations being applied.
+// a prefix expression and the flow of operations being applied.
 // This should generate our input, but with more parenthesis showcasing
 // the operator precedence understood within our application, specifically
 // within a PrefixExpression. Implementing the Node interface on
@@ -253,6 +252,58 @@ func (pe *PrefixExpression) String() string {
 	sb.WriteString("(")
 	sb.WriteString(pe.Operator)
 	sb.WriteString(pe.Right.String())
+	sb.WriteString(")")
+
+	return sb.String()
+}
+
+// Infix Expressions are represented as the following
+//
+//	<expression> <infix operator> <expression>
+//
+// This expression will power operations with two operands (left and right),
+// with an operator in between these operands, e.g. 5 + 5;
+// Below is a list of examples that represent infix operations within our language
+//
+//	5 + 5;
+//	5 - 5;
+//	5 * 5;
+//	5 / 5;
+//	5 > 5;
+//	5 < 5;
+//	5 == 5;
+//	5 != 5;
+//
+// These operations will also have precedence tied to them appropriately as they are parsed down.
+type InfixExpression struct {
+	Token    token.Token // The operator token, e.g. + / *
+	Left     Expression
+	Operator string
+	Right    Expression
+}
+
+// Implementing Expression interface on InfixExpression
+func (ie *InfixExpression) expressionNode() {}
+
+// Implementing Node interface on InfixExpression
+func (ie *InfixExpression) TokenLiteral() string {
+	return ie.Token.Literal
+}
+
+// String representation of the Infix Expression
+// Helps us debug and showcase the operator precedence within
+// a infix expression and the flow of operations being applied.
+// This should generate our input, but with more parenthesis showcasing
+// the operator precedence understood within our application, specifically
+// within a InfixExpression. Implementing the Node interface on
+// InfixExpression.
+func (ie *InfixExpression) String() string {
+	var sb strings.Builder
+
+	sb.WriteString("(")
+	sb.WriteString(ie.Left.String())
+	sb.WriteString(" " + ie.Operator + " ")
+	sb.WriteString(ie.Right.String())
 	sb.WriteString(")")
 
 	return sb.String()
