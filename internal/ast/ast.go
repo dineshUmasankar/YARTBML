@@ -463,3 +463,44 @@ func (fl *FunctionLiteral) String() string {
 
 	return sb.String()
 }
+
+// Used to parse the calling of a function: call expressions.
+// Structure: <expression>(<comma-separated expressions>)
+//
+// Examples: add(2, 3) or add(2 + 2, 3 * 3 * 3)
+// The identifier add returns this function when being evaluated.
+//
+// Another Example is callsFunction(2, 3, fn(x , y) {x + y; });
+// Showcases using function literals as arguments
+type CallExpression struct {
+	Token     token.Token // The '(' token
+	Function  Expression  // Identifier or FunctionLiteral
+	Arguments []Expression
+}
+
+// Implementing Expression interface on CallExpression
+func (ce *CallExpression) expressionNode() {}
+
+// Implementing Node interface on CallExpression
+func (ce *CallExpression) TokenLiteral() string {
+	return ce.Token.Literal
+}
+
+// String Representation of when a function is being called (invoked)
+// Implementation for Node interface on CallExpression
+func (ce *CallExpression) String() string {
+	var sb strings.Builder
+
+	args := []string{}
+
+	for _, a := range ce.Arguments {
+		args = append(args, a.String())
+	}
+
+	sb.WriteString(ce.Function.String())
+	sb.WriteString("(")
+	sb.WriteString(strings.Join(args, ", "))
+	sb.WriteString(")")
+
+	return sb.String()
+}
