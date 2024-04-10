@@ -5,6 +5,7 @@ package repl
 import (
 	"YARTBML/evaluator"
 	"YARTBML/lexer"
+	"YARTBML/object"
 	"YARTBML/parser"
 	"bufio"
 	"fmt"
@@ -16,6 +17,7 @@ const PROMPT = ">> "
 // Takes an input, lexes, parses, evals, then prints the result
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
 	for {
 		fmt.Fprintf(out, PROMPT)
 		scanned := scanner.Scan()
@@ -33,7 +35,7 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 		// Pass to evaluator
-		evaluated := evaluator.Eval(program)
+		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
 			io.WriteString(out, "\n")

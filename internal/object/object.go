@@ -70,3 +70,27 @@ type Error struct {
 // Gives Error struct object interface
 func (e *Error) Type() ObjectType { return ERROR_OBJ }
 func (e *Error) Inspect() string  { return "ERROR: " + e.Message }
+
+// Envionment object to store variable bindings
+type Environment struct {
+	store map[string]Object
+}
+
+// Creates a new environmnet
+// Store bindings in a map
+func NewEnvironment() *Environment {
+	s := make(map[string]Object)
+	return &Environment{store: s}
+}
+
+// Retrieves binding name and value from environment
+func (e *Environment) Get(name string) (Object, bool) {
+	obj, ok := e.store[name]
+	return obj, ok
+}
+
+// Stores binding name and value in environmnet
+func (e *Environment) Set(name string, val Object) Object {
+	e.store[name] = val
+	return val
+}
