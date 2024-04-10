@@ -156,6 +156,7 @@ func evalIfExpression(ie *ast.IfExpression) object.Object {
 		return NULL
 	}
 }
+
 func isTruthy(obj object.Object) bool {
 	switch obj {
 	case NULL:
