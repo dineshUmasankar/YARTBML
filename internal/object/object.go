@@ -14,6 +14,7 @@ const (
 	BOOEAN_OBJ       = "BOOLEAN"
 	NULL_OBJ         = "NULL"
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
+	ERROR_OBJ        = "ERROR"
 )
 
 // Any type that implements all the methods of the Object will automatically implement the interface itself
@@ -55,7 +56,17 @@ type ReturnValue struct {
 	Value Object
 }
 
-// Receiver functions Return struct
-// Gives integer struct object interface
+// Receiver functions for Return struct
+// Gives return struct object interface
 func (rv *ReturnValue) Type() ObjectType { return RETURN_VALUE_OBJ }
 func (rv *ReturnValue) Inspect() string  { return rv.Value.Inspect() }
+
+// Error type
+type Error struct {
+	Message string
+}
+
+// Receiver functions for Error struct
+// Gives Error struct object interface
+func (e *Error) Type() ObjectType { return ERROR_OBJ }
+func (e *Error) Inspect() string  { return "ERROR: " + e.Message }
