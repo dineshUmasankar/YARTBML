@@ -1,5 +1,6 @@
 // Package object provides functionatlity to represent all YARTBML values as objects by wrapping values with structs.
 // The object type is represented as an interface becuase every value needs a different internal representation.
+// YARTBML values are saved as structs so that values can be passed around and modified
 
 package object
 
