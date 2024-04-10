@@ -1,3 +1,7 @@
+// The environment adds support for keeping track of bindings
+// Bindings are assigned using let statements. A variable is bound to value.
+// The enviornment is passed along when evaluating expressions.
+
 package object
 
 func NewEnclosedEnvironment(outer *Environment) *Environment {
@@ -6,13 +10,13 @@ func NewEnclosedEnvironment(outer *Environment) *Environment {
 	return env
 }
 
-// Envionment object to store variable bindings
+// Environment object to store variable bindings
 type Environment struct {
 	store map[string]Object
 	outer *Environment
 }
 
-// Creates a new environmnet
+// Creates a new environment
 // Store bindings in a map
 func NewEnvironment() *Environment {
 	s := make(map[string]Object)
@@ -30,7 +34,7 @@ func (e *Environment) Get(name string) (Object, bool) {
 	return obj, ok
 }
 
-// Stores binding name and value in environmnet
+// Stores binding name and value in environment
 func (e *Environment) Set(name string, val Object) Object {
 	e.store[name] = val
 	return val
