@@ -16,16 +16,15 @@ var (
 	NULL  = &object.Null{}
 )
 
-// Takes an AST node and outputs the corresponding object
-// Recusively calls Eval to "tree-walk" the AST
+// Takes an AST node and outputs the evaluated object
+// Recursively calls Eval to "tree-walk" the AST
 func Eval(node ast.Node) object.Object {
 	switch node := node.(type) {
 	// Statements
 	case *ast.Program:
-		return evalStatements(node.Statements)
+		return evalProgram(node)
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression)
-	// Expressions
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value}
 
@@ -40,9 +39,12 @@ func Eval(node ast.Node) object.Object {
 		right := Eval(node.Right)
 		return evalInfixExpression(node.Operator, left, right)
 	case *ast.BlockStatement:
-		return evalStatements(node.Statements)
+		return evalBlockStatement(node)
 	case *ast.IfExpression:
 		return evalIfExpression(node)
+	case *ast.ReturnStatement:
+		val := Eval(node.ReturnValue)
+		return &object.ReturnValue{Value: val}
 	}
 	return nil
 }
@@ -52,6 +54,10 @@ func evalStatements(stmts []ast.Statement) object.Object {
 	var result object.Object
 	for _, statement := range stmts {
 		result = Eval(statement)
+
+		if returnValue, ok := result.(*object.ReturnValue); ok {
+			return returnValue.Value
+		}
 	}
 	return result
 }
@@ -76,7 +82,8 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 	}
 }
 
-// Determines if object is supported for bang operator prefix operations
+// Returns the inverse of the boolean value or returns false if the object is not a bool
+// Null values return true
 func evalBangOperatorExpression(right object.Object) object.Object {
 	switch right {
 	case TRUE:
@@ -146,17 +153,19 @@ func evalIntegerInfixExpression(
 	}
 }
 
+// Evaluates if-expression condition then returns the evalutated "then" or "else" path
 func evalIfExpression(ie *ast.IfExpression) object.Object {
-	condition := Eval(ie.Condition)
+	condition := Eval(ie.TestCondition)
 	if isTruthy(condition) {
-		return Eval(ie.Consequence)
-	} else if ie.Alternative != nil {
-		return Eval(ie.Alternative)
+		return Eval(ie.ThenPath)
+	} else if ie.ElsePath != nil {
+		return Eval(ie.ElsePath)
 	} else {
 		return NULL
 	}
 }
 
+// Truthy means that values other than False and null are evaluate to be true
 func isTruthy(obj object.Object) bool {
 	switch obj {
 	case NULL:
@@ -168,4 +177,29 @@ func isTruthy(obj object.Object) bool {
 	default:
 		return true
 	}
+}
+
+// Recursively evaluates a series of program statements then returns the return value,
+// else the result
+func evalProgram(program *ast.Program) object.Object {
+	var result object.Object
+	for _, statement := range program.Statements {
+		result = Eval(statement)
+		if returnValue, ok := result.(*object.ReturnValue); ok {
+			return returnValue.Value
+		}
+	}
+	return result
+}
+
+// Recursively evaluates a series of block statements then returns the result
+func evalBlockStatement(block *ast.BlockStatement) object.Object {
+	var result object.Object
+	for _, statement := range block.Statements {
+		result = Eval(statement)
+		if result != nil && result.Type() == object.RETURN_VALUE_OBJ {
+			return result
+		}
+	}
+	return result
 }
