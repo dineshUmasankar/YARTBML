@@ -1,10 +1,11 @@
 package evaluator
 
 import (
+	"testing"
+
 	"YARTBML/lexer"
 	"YARTBML/object"
 	"YARTBML/parser"
-	"testing"
 )
 
 func TestEvalIntegerExpression(t *testing.T) {

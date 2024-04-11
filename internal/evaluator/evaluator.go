@@ -1,12 +1,12 @@
 // Package evaluator provides functionality to interpret the AST output from the parser.
 // The evaluator follows the "tree-walking" method by recursively working its way through each node in the AST.
-
 package evaluator
 
 import (
+	"fmt"
+
 	"YARTBML/ast"
 	"YARTBML/object"
-	"fmt"
 )
 
 // Creates error objects with given message
