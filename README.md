@@ -192,6 +192,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 * Dinesh Umasankar - dinesh71uma@gmail.com
 * Joesph H. Porrino - jhp5207@psu.edu
 * Katherine Rose Banis - kbb5551@psu.edu
+* Paul W. Jensen - pwj5084@psu.edu
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
