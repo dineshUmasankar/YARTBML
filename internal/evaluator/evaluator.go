@@ -316,9 +316,17 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 	if !ok {
 		return newError("not a function: %s", fn.Type())
 	}
+	if len(function.Parameters) != len(args) {
+		return newError(
+			"wrong number of arguments. want=%d. got=%d",
+			len(function.Parameters),
+			len(args))
+	}
+
 	extendedEnv := extendFunctionEnv(function, args)
 	evaluated := Eval(function.Body, extendedEnv)
 	return unwrapReturnValue(evaluated)
+
 }
 
 // Extends the enviornment with a new enclosed enviornment

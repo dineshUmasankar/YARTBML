@@ -223,6 +223,14 @@ func TestErrorHandling(t *testing.T) {
 			"foobar",
 			"identifier not found: foobar",
 		},
+		{
+			"let x = fn(x, y) { x + y;}; x(1);",
+			"wrong number of arguments. want=2. got=1",
+		},
+		{
+			"let x = fn(x, y) { x + y;}; x(1, 2, 3);",
+			"wrong number of arguments. want=2. got=3",
+		},
 	}
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)
