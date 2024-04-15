@@ -66,7 +66,7 @@
           "name": "whitespace.ybml"
         },
         {
-          "begin": "\\b(fn)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+          "begin": "\\b(fn)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*",
           "beginCaptures": {
             "1": {
               "name": "keyword.control.function.ybml"
@@ -75,9 +75,9 @@
               "name": "entity.name.function.ybml"
             }
           },
-          "end": "(\\))",
+          "end": "\\)",
           "endCaptures": {
-            "1": {
+            "0": {
               "name": "punctuation.definition.parameters.end.ybml"
             }
           },

@@ -1,6 +1,4 @@
-# yartbml README
-
-This is the README for the extension "yartbml".
+# YARTBML Highlighting for Visual Studio Code
 
 ## Features
 
@@ -16,13 +14,9 @@ VSCode Version ^1.81.1
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
+- `myExtension.enable`: Enable/disable this extension.
 
 ## Known Issues
 

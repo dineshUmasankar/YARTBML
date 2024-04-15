@@ -3,6 +3,8 @@
   "displayName": "YARTBML",
   "description": "YARTBML syntax highlighter",
   "version": "0.0.2",
+  "publisher": "N/A",
+  "icon": "images/logo.png",
   "engines": {
     "vscode": "^1.81.1"
   },
@@ -20,11 +22,7 @@
         "extensions": [
           ".ybml"
         ],
-        "configuration": "./language-configuration.json",
-        "icon": {
-          "dark": "../../../assets/logo.png",
-          "light": "../../../assets/logo.png"
-        }
+        "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
