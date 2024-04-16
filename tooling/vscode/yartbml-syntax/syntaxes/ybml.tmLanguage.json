@@ -46,7 +46,7 @@
           "name": "keyword.operator.comparison.int.ybml"
         },
         {
-          "match": "(\\+|\\-|\\*|)",
+          "match": "(\\+|\\-|\\*|\\/)\\b",
           "name": "keyword.operator.arithmetic.int.ybml"
         },
         {
@@ -54,8 +54,12 @@
           "name": "keyword.operator.assignment.ybml"
         },
         {
-          "match": "\\[|\\]|\\{|\\}|\\(|\\)|,|;|:",
+          "match": "\\[|\\]|\\{|\\}|\\(|\\)|,|:",
           "name": "punctuation.separator.ybml"
+        },
+        {
+          "match": ";",
+          "name": "punctuation.terminator.ybml"
         },
         {
           "match": "\\b[a-zA-Z][a-zA-Z0-9_]*\\b",

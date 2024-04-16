@@ -2,9 +2,9 @@
   "name": "yartbml",
   "displayName": "YARTBML",
   "description": "YARTBML syntax highlighter",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "Ourselves",
-  "icon": "images/logo.png",
+  "icon": "assets/logo.png",
   "engines": {
     "vscode": "^1.81.1"
   },
@@ -32,5 +32,8 @@
         "path": "./syntaxes/ybml.tmLanguage.json"
       }
     ]
+  },
+  "dependencies": {
+    "vsce": "^2.15.0"
   }
 }
