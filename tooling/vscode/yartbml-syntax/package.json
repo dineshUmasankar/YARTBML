@@ -2,8 +2,8 @@
   "name": "yartbml",
   "displayName": "YARTBML",
   "description": "YARTBML syntax highlighter",
-  "version": "0.0.2",
-  "publisher": "N/A",
+  "version": "0.0.3",
+  "publisher": "Ourselves",
   "icon": "images/logo.png",
   "engines": {
     "vscode": "^1.81.1"
