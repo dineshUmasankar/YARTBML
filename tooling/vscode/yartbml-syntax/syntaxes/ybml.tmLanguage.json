@@ -6,10 +6,10 @@
     { "include": "#keywords" },
     { "include": "#strings" },
     { "include": "#constant" },
-    { "include": "#function-definition" },
-    { "include": "#function-assignment" },
     { "include": "#function-call" },
-    { "include": "#variable-definition" }
+    { "include": "#variable-definition" },
+    { "include": "#function-definition" },
+    { "include": "#function-assignment" }
   ],
   "repository": {
     "function-definition": {
@@ -116,10 +116,6 @@
         {
           "match": "[\\[\\]\\{\\}\\(\\),:;]",
           "name": "punctuation.ybml"
-        },
-        {
-          "match": "\\b[a-zA-Z][a-zA-Z0-9_]*\\b",
-          "name": "variable.other.identifier.ybml"
         },
         {
           "match": "[ \\t\\n]+",
