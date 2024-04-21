@@ -18,14 +18,10 @@ let adder = newAdder(1, 2);
 
 adder(8);
 
-// Integers & arithmetic expressions...
 let version = 1 + (50 / 2) - (8 * 3);
 
-// ... and strings
 let name = "The Monkey programming language";
 
-// ... booleans
 let isMonkeyFastNow = true;
 
-// ... arrays & hash maps
 let people = [{"name": "Anna", "age": 24}, {"name": "Bob", "age": 99}];

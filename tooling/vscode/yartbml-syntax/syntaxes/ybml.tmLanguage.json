@@ -3,37 +3,46 @@
   "fileTypes": ["ybml"],
   "name": "YARTBML",
   "patterns": [
-    { "include": "#comments" },
     { "include": "#keywords" },
     { "include": "#strings" },
     { "include": "#constant" },
     { "include": "#function-definition" },
+    { "include": "#function-assignment" },
     { "include": "#function-call" },
     { "include": "#variable-definition" }
   ],
   "repository": {
-    "function-call": {
-      "begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(\\()",
+    "function-definition": {
+      "begin": "\\bfn\\(",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.other.fn.ybml"
+        }
+      },
+      "end": "\\);",
+      "name": "meta.function.ybml",
+      "patterns": [
+        { "include": "#function-parameters" },
+        { "include": "#function-body" }
+      ]
+    },
+    "function-assignment": {
+      "begin": "\\blet\\s+([a-zA-Z_\\$][a-zA-Z0-9_\\$]*)\\s*=\\s*fn\\(",
       "beginCaptures": {
         "1": {
-          "name": "variable.function.ybml"
-        },
-        "2": {
-          "name": "punctuation.definition.parameters.begin.ybml"
+          "name": "entity.name.function.ybml"
         }
       },
-      "end": "\\)",
-      "endCaptures": {
-        "0": {
-          "name": "punctuation.definition.parameters.end.ybml"
-        }
-      },
-      "name": "meta.function-call.ybml",
+      "end": "\\);",
       "patterns": [
         {
-          "include": "#expression"
+          "include": "#function-body"
         }
       ]
+    },
+    "function-call": {
+      "match": "\\b(?!fn\\b)([a-zA-Z_\\$][a-zA-Z0-9_\\$]*)\\s*\\(.*?\\)",
+      "name": "variable.function.ybml"
     },
     "function-parameters": {
       "begin": "\\(",
@@ -60,25 +69,26 @@
         }
       ]
     },
-    "function-definition": {
-      "begin": "(\\blet\\s+)(\\w+)(\\s*=\\s*fn\\s*\\()",
+    "function-body": {
+      "begin": "\\{",
       "beginCaptures": {
-        "1": {
-          "name": "keyword.declaration.let.ybml"
-        },
-        "2": {
-          "name": "entity.name.function.ybml"
-        },
-        "3": {
-          "name": "keyword.other.fn.ybml"
+        "0": {
+          "name": "punctuation.section.block.begin.ybml"
         }
       },
-      "end": "\\);",
-      "name": "meta.function.ybml",
+      "end": "\\}",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.block.end.ybml"
+        }
+      },
+      "name": "meta.function-body.ybml",
       "patterns": [
-        { "include": "#control-structure" },
         { "include": "#expression" },
-        { "include": "#function-parameters" }
+        { "include": "#control-structure" },
+        { "include": "#variable-definition" },
+        { "include": "#function-call" },
+        { "include": "#strings" }
       ]
     },
     "integer": {
@@ -88,14 +98,6 @@
     "boolean": {
       "match": "\\b(true|false)\\b",
       "name": "constant.language.boolean.ybml"
-    },
-    "comments": {
-      "patterns": [
-        {
-          "match": "//.*",
-          "name": "comment.line.ybml"
-        }
-      ]
     },
     "keywords": {
       "patterns": [
@@ -126,29 +128,48 @@
       ]
     },
     "variable-definition": {
-      "begin": "\\blet\\s+",
-      "end": "(;|$|\\n)",
+      "begin": "(\\blet\\s+)([a-zA-Z_][a-zA-Z0-9_]*)\\b",
       "beginCaptures": {
-        "0": {
+        "1": {
           "name": "keyword.declaration.let.ybml"
+        },
+        "2": {
+          "name": "entity.name.variable.ybml"
         }
       },
-      "patterns": [
-        {
-          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b",
-          "name": "variable.other.definition.ybml"
-        }
-      ]
+      "end": "(;|$|\\n)"
     },
     "control-structure": {
-      "begin": "\\b(if|else)\\b\\s*\\(",
+      "begin": "\\b(if|else)\\b\\s*(?=\\()",
       "beginCaptures": {
         "0": {
           "name": "keyword.control.ybml"
         }
       },
       "end": "\\)",
-      "patterns": [{ "include": "#expression" }]
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.condition.end.ybml"
+        }
+      },
+      "name": "meta.control-structure.ybml",
+      "patterns": [
+        {
+          "begin": "\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.condition.begin.ybml"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.condition.end.ybml"
+            }
+          },
+          "patterns": [{ "include": "#expression" }]
+        }
+      ]
     },
     "expression": {
       "patterns": [
