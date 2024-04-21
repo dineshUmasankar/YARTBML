@@ -2,7 +2,7 @@
   "name": "yartbml",
   "displayName": "YARTBML",
   "description": "YARTBML syntax highlighter",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "publisher": "Ourselves",
   "icon": "assets/logo.png",
   "engines": {

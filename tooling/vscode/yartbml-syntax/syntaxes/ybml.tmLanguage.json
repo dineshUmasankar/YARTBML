@@ -42,7 +42,11 @@
     "keywords": {
       "patterns": [
         {
-          "match": "\\b(let|fn|return|if|else)\\b",
+          "match": "\\blet\\b",
+          "name": "keyword.declaration.let.ybml"
+        },
+        {
+          "match": "\\b(fn|return|if|else)\\b",
           "name": "keyword.control.ybml"
         },
         {
@@ -50,7 +54,7 @@
           "name": "keyword.operator.comparison.ybml"
         },
         {
-          "match": "(\\+|\\-|\\*|\\/)\\b",
+          "match": "(\\+|\\-|\\*|\\/)",
           "name": "keyword.operator.arithmetic.ybml"
         },
         {
@@ -75,32 +79,17 @@
         }
       ]
     },
-    "strings": {
-      "name": "string.quoted.double.ybml",
-      "begin": "\"",
-      "end": "\"",
-      "patterns": [
-        {
-          "name": "constant.character.escape.ybml",
-          "match": "\\\\."
-        }
-      ]
-    },
-    "constant": {
-      "patterns": [
-        {
-          "include": "#boolean"
-        },
-        {
-          "include": "#integer"
-        }
-      ]
-    },
     "function-definition": {
-      "begin": "\\blet\\s+(\\w+)\\s*=\\s*fn\\s*\\(",
+      "begin": "(\\blet\\s+)(\\w+)(\\s*=\\s*fn\\s*\\()",
       "beginCaptures": {
         "1": {
-          "name": "variable.other.assignment.ybml"
+          "name": "keyword.declaration.let.ybml"
+        },
+        "2": {
+          "name": "entity.name.function.ybml"
+        },
+        "3": {
+          "name": "keyword.other.fn.ybml"
         }
       },
       "end": "\\);",
@@ -153,6 +142,27 @@
         {
           "match": "\\b\\w+\\b",
           "name": "variable.other.ybml"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.ybml",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.ybml",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "constant": {
+      "patterns": [
+        {
+          "include": "#boolean"
+        },
+        {
+          "include": "#integer"
         }
       ]
     }
