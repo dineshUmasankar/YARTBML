@@ -99,19 +99,6 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	return nil
 }
 
-// Evaluates each statement in the list and returns the last statement evaluated
-func evalStatements(stmts []ast.Statement, env *object.Environment) object.Object {
-	var result object.Object
-	for _, statement := range stmts {
-		result = Eval(statement, env)
-
-		if returnValue, ok := result.(*object.ReturnValue); ok {
-			return returnValue.Value
-		}
-	}
-	return result
-}
-
 // Reuses TRUE and FALSE objects defined in var
 func nativeBoolToBooleanObject(input bool) *object.Boolean {
 	if input {
