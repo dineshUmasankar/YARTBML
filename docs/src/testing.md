@@ -7,26 +7,32 @@ keywords: [Markdown, Example]
 lang: "en"
 ...
 
-# Vinaque sanguine metuenti cuiquam Alcyone fixus
+# Introduction
 
-## Aesculeae domus vincemur et Veneris adsuetus lapsum
+# Functions to be tested
 
-Lorem markdownum Letoia, et alios: figurae flectentem annis aliquid Peneosque ab
-esse, obstat gravitate. Obscura atque coniuge, per de coniunx, sibi **medias
-commentaque virgine** anima tamen comitemque petis, sed. In Amphion vestros
-hamos ire arceor mandere spicula, in licet aliquando.
+### Lexer 
+- `TestNextToken`: Does the tokenization function correctly tokenize the provided input string according to the expected token types and literals?
 
-```java
-public class Example implements LoremIpsum {
-	public static void main(String[] args) {
-		if(args.length < 2) {
-			System.out.println("Lorem ipsum dolor sit amet");
-		}
-	} // Obscura atque coniuge, per de coniunx
-}
-```
+### Parser 
 
-Porrigitur et Pallas nuper longusque cratere habuisse sepulcro pectore fertur.
-Laudat ille auditi; vertitur iura tum nepotis causa; motus. Diva virtus! Acrota
-destruitis vos iubet quo et classis excessere Scyrumve spiro subitusque mente
-Pirithoi abstulit, lapides.
+- `TestLetStatements`: Does it correctly parse let statements with various types of values (integer, boolean, identifier)?
+- `TestReturnStatements`: Does it correctly parse return statements with various types of return values (integer, boolean, identifier)?
+- `TestIdentifierExpression`: Does it correctly parse identifier expressions?
+- `TestIntegerLiteralExpression`: Does it correctly parse integer literal expressions?
+- `TestBooleanLiteralExpression`: Does it correctly parse boolean literal expressions?
+- `TestParsingPrefixExpressions`: Does it correctly parse prefix expressions (e.g., !5, -15, !true, !false)?
+- `TestParsingInfixExpressions`: Does it correctly parse infix expressions (e.g., 5 + 5, 5 - 5, 5 * 5, 5 / 5, 5 > 5, 5 < 5, 5 == 5, 5 != 5)?
+- `TestOperatorPrecedenceParsing`: Does it correctly parse operator precedence in expressions?
+- `TestIfExpression`: Does it correctly parse if expressions without else clauses?
+- `TestIfElseExpression`: Does it correctly parse if expressions with else clauses?
+- `TestFunctionLiteralParsing`: Does it correctly parse function literals?
+- `TestFunctionParameterParsing`: Does it correctly parse function parameters?
+- `TestCallExpressionParsing`: Does it correctly parse call expressions?
+- `TestCallExpressionParameterParsing`: Does it correctly parse call expressions with parameters?
+
+### AST
+
+- `TestString`: Does the AST produce the expected input sourcecode of YARTBML?
+
+### 
