@@ -7,7 +7,19 @@ keywords: [Markdown, Example]
 lang: "en"
 ...
 
-# Introduction
+## Introduction
+The YARTBML is a language designed for simplicity and ease of understanding. As with any programming language, ensuring the correctness and reliability of its components is crucial. In this document, we outline the testing strategy for the main components of the YARTBML language: Lexer, Parser, AST (Abstract Syntax Tree), and Evaluator.
+
+## Components to Be Tested
+The main components of the YARTBML language that need to be tested are:
+- Lexer: Responsible for tokenizing the input source code.
+- Parser: Converts the tokenized input into an AST representation.
+- AST (Abstract Syntax Tree): Represents the structure of the parsed code.
+- Evaluator: Executes the code represented by the AST and produces results.
+
+## Testing Strategy
+The testing strategy involves writing comprehensive test cases for each component to ensure that they behave as expected and handle various input scenarios appropriately. Each test case aims to verify the correctness, completeness, and robustness of the respective component.
+
 
 # Functions to be tested
 
@@ -35,4 +47,15 @@ lang: "en"
 
 - `TestString`: Does the AST produce the expected input sourcecode of YARTBML?
 
-### 
+### Evaluator
+
+- `TestEvalIntegerExpression`: Does it correctly evaluate integer expressions (e.g., 5, 10, -5, -10, 5 + 5 + 5 + 5 - 10)?
+- `TestEvalBooleanExpression`: Does it correctly evaluate boolean expressions (e.g., true, false, 1 < 2, 1 > 2)?
+- `TestBangOperator`: Does it correctly evaluate the bang operator (!) for boolean expressions?
+- `TestIfElseExpressions`: Does it correctly evaluate if-else expressions?
+- `TestReturnStatements`: Does it correctly evaluate return statements?
+- `TestErrorHandling`: Does it correctly handle errors in expressions?
+- `TestLetStatements`: Does it correctly evaluate let statements?
+- `TestFunctionObject`: Does it correctly create function objects?
+- `TestFunctionApplication`: Does it correctly apply function objects?
+- `TestClosures`: Does it correctly handle closures?
