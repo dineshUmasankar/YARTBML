@@ -1,12 +1,15 @@
 ---
-title: "Example PDF"
-author: [Author]
-date: "2017-02-20"
+title: "Testing Plan"
+author: [Joseph Porrino, Dinesh Umasankar, Katherine Banis, Paul Jensen]
+date: "2024-04-23"
 subject: "Markdown"
-keywords: [Markdown, Example]
+keywords: [Testing Plan]
 lang: "en"
 ...
 
+# Testing Plan
+
+This document defines the testing plan for the YARTBML language.
 ## Introduction
 The YARTBML is a language designed for simplicity and ease of understanding. As with any programming language, ensuring the correctness and reliability of its components is crucial. In this document, we outline the testing strategy for the main components of the YARTBML language: Lexer, Parser, AST (Abstract Syntax Tree), and Evaluator.
 
