@@ -97,6 +97,19 @@ For Penn State's CMPSC 470: Compiler Construction, We are following Thorsten Bal
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+1. Press `.` on keyboard
+
+OR 
+
+1. Open Codespaces
+
+![Codespaces](assets/codespaces.png)
+
+2. Navigate to main.go(`cd internal/`)
+
+3. Run Go(`go run .`)
+
+
 ```js
 // Integers & arithmetic expressions...
 let version = 1 + (50 / 2) - (8 * 3);
