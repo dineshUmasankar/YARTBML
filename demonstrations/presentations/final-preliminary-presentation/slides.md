@@ -153,6 +153,8 @@ layout: section
 
 # Evaluator
 
+- Tree walks AST
+- Start from root of AST and recurisvely call each node
 - 
 ---
 layout: statement
