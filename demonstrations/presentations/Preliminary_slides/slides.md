@@ -60,48 +60,57 @@ Joe
 layout: section
 ---
 
-# **Project Components**
+# **Let's Prove It**
 
 ---
 
-# Lexer
+# File Format
 
 <br/>
 <v-clicks>
 
-- Purpose is to tokenize text so parser can create an AST
-- A token is a struct that holds a type and literal
-
-```js
-type Token struct {
-	Type    TokenType
-	Literal string
-}
-```
-
-- Lexer increments over each char in input string
-- Tokenizes: Operators, delimiters, identifiers, keywords, and numbers
-
-```js
->> let x = 5
-{Type:LET Literal:let}
-{Type:IDENT Literal:x}
-{Type:= Literal:=}
-{Type:INT Literal:5}
->>
-```
+- To start writing code in YARTBML, make a `.ybml` file.
+- All programs will be interpreted under UTF-8, and English Alphanumeric Characters only.
+- Let's make an example fibonacci program.
 
 </v-clicks>
+
+<!--
+.ybml
+UTF-8
+
+Paul
+-->
 
 ---
 layout: section
 ---
 
-# Parser
+# Fibonacci Program
 
-- 
+<div class="font-italic text-sm">fibonacci.ybml</div>
+```js {1|2-4|5-9|13|all}
+let fibonacci = fn(x) {
+    if (x == 0) {
+        return 0;
+    } else {
+        if (x == 1) {
+            return 1;
+        } else {
+            fibonacci(x - 1) + fibonacci(x - 2);
+        }
+    }
+};
 
+puts(fibonacci(10)) // Displays "55".
+```
 
+<!--
+Explain each highlighted section as it showcases various aspects of the language
+
+puts - print
+Dinesh
+-->
 
 ---
 layout: section
