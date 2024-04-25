@@ -62,3 +62,12 @@ The testing strategy involves writing comprehensive test cases for each componen
 - `TestFunctionObject`: Does it correctly create function objects?
 - `TestFunctionApplication`: Does it correctly apply function objects?
 - `TestClosures`: Does it correctly handle closures?
+
+# Run Test Suite
+
+Open project in IDE of your choosing. In the terminal confirm your working in the root directory of the project. In the terminal run the following commands:
+
+1. cd internal
+2. go test ./lexer
+3. go test ./parser
+4. go test ./ast
