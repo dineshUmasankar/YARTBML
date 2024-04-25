@@ -115,25 +115,38 @@ image: AST.png
 - Pratt parsing
 - The image represents ```let x = 5``` as an AST
 - Input are tokens from lexer
-- Parser calls functions to build nodes based on token 
+- Tokens get parsed and nodes are created
 
 </v-clicks>
 <v-clicks>
 
 ```js
-p.registerPrefix(token.IDENT, p.parseIdentifier)
-p.registerPrefix(token.INT, p.parseIntegerLiteral)
-p.registerPrefix(token.BANG, p.parsePrefixExpression)
+type LetStatement struct {
+  Token token.Token // token.LET token
+  Name  *Identifier
+  Value Expression
+}
 ```
 
 </v-clicks>
 <v-clicks>
 
-- Output is a list of statements
+- AST is built by appending nodes to a list
 
 </v-clicks>
 
+<v-clicks>
 
+```js
+stmt := p.parseStatement()
+if stmt != nil {
+  program.Statements = append(program.Statements, stmt)
+}
+p.nextToken()
+
+```
+
+</v-clicks>
 ---
 layout: section
 ---
