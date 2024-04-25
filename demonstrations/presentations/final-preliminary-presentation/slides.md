@@ -57,7 +57,7 @@ Joe
 -->
 
 ---
-layout: section
+layout: statement
 ---
 
 # **Project Components**
@@ -72,6 +72,9 @@ layout: section
 - Purpose is to tokenize text so parser can create an AST
 - A token is a struct that holds a type and literal
 
+</v-clicks>
+<v-clicks>
+
 ```js
 type Token struct {
 	Type    TokenType
@@ -79,8 +82,15 @@ type Token struct {
 }
 ```
 
+</v-clicks>
+<v-clicks>
+
 - Lexer increments over each char in input string
 - Tokenizes: Operators, delimiters, identifiers, keywords, and numbers
+
+</v-clicks>
+
+<v-clicks>
 
 ```js
 >> let x = 5
@@ -94,25 +104,43 @@ type Token struct {
 </v-clicks>
 
 ---
-layout: section
+layout: image-right
+image: AST.png
 ---
 
 # Parser
 
-- 
+<v-clicks>
 
+- Pratt parsing
+- The image represents ```let x = 5``` as an AST
+- Input are tokens from lexer
+- Parser calls functions to build nodes based on token 
+
+</v-clicks>
+<v-clicks>
+
+```js
+p.registerPrefix(token.IDENT, p.parseIdentifier)
+p.registerPrefix(token.INT, p.parseIntegerLiteral)
+p.registerPrefix(token.BANG, p.parsePrefixExpression)
+```
+
+</v-clicks>
+<v-clicks>
+
+- Output is a list of statements
+
+</v-clicks>
 
 
 ---
 layout: section
 ---
 
-# **Core Language Principles**
+# Evaluator
 
-<!--
-Joe
--->
-
+- 
 ---
 layout: statement
 ---
