@@ -1,8 +1,12 @@
+// Package repl provides functionality to Read, Eval, Print then loop on the YARTBML language.
+// The REPL is used from the command line to take in YARTBML code and output the result
 package repl
 
 import (
+	"YARTBML/evaluator"
 	"YARTBML/lexer"
-	"YARTBML/token"
+	"YARTBML/object"
+	"YARTBML/parser"
 	"bufio"
 	"fmt"
 	"io"
@@ -10,8 +14,10 @@ import (
 
 const PROMPT = ">> "
 
+// Takes an input, lexes, parses, evals, then prints the result
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
 	for {
 		fmt.Fprintf(out, PROMPT)
 		scanned := scanner.Scan()
@@ -19,9 +25,29 @@ func Start(in io.Reader, out io.Writer) {
 			return
 		}
 		line := scanner.Text()
+		// Pass to lexer
 		l := lexer.New(line)
-		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-			fmt.Fprintf(out, "%+v\n", tok)
+		// Pass to parser
+		p := parser.New(l)
+		program := p.ParseProgram()
+		if len(p.Errors()) != 0 {
+			printParserErrors(out, p.Errors())
+			continue
 		}
+		// Pass to evaluator
+		evaluated := evaluator.Eval(program, env)
+		if evaluated != nil {
+			io.WriteString(out, evaluated.Inspect())
+			io.WriteString(out, "\n")
+		}
+
+		// Loop back to input
+	}
+}
+
+// Prints errors from the parser
+func printParserErrors(out io.Writer, errors []string) {
+	for _, msg := range errors {
+		io.WriteString(out, "\t"+msg+"\n")
 	}
 }

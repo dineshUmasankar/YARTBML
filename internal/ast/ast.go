@@ -365,17 +365,17 @@ func (bs *BlockStatement) String() string {
 //		return x;
 //	} else {
 //		return y;
-//	}
+//	};
 //
 // The else is optional and can be left out as shown here
 //
 //	if (x > y) {
 //		return x;
-//	}
+//	};
 //
 // if-else conditionals are expressions, which means they produce a value.
 //
-//	let foobar = if (x > y) { x } else { y };
+//	let foobar = if (x > y) { x; } else { y; };
 //
 // The ThenPath and ElsePath are Block Statements, which are just a series of statements (just like programs).
 type IfExpression struct {
@@ -419,13 +419,13 @@ func (ie *IfExpression) String() string {
 //
 //	fn() {
 //		return foobar + barfoo;
-//	}
+//	};
 //
-//	let myFunction = fn (x, y) { return x + y }
+//	let myFunction = fn (x, y) { return x + y; };
 //
 //	fn () {
 //		return fn(x, y) { return x > y; };
-//	}
+//	};
 //
 // As you can see in the examples above, the `myFunction` variable is able to store
 // the function literal as an expression, which can be invoked later by myFunction(x, y).
@@ -470,7 +470,7 @@ func (fl *FunctionLiteral) String() string {
 // Examples: add(2, 3) or add(2 + 2, 3 * 3 * 3)
 // The identifier add returns this function when being evaluated.
 //
-// Another Example is callsFunction(2, 3, fn(x , y) {x + y; });
+// Another Example is callsFunction(2, 3, fn(x , y) {x + y; };);
 // Showcases using function literals as arguments
 type CallExpression struct {
 	Token     token.Token // The '(' token
