@@ -252,7 +252,7 @@ layout: section
 <v-clicks>
 
 - Tree walks AST
-- Start from root of AST and recurisvely call each node
+- Start from root of AST and recurisvely evaluate each node
 - Values are represented as objects to be passed through evaluator
 - Environment holds identifier bindings
 
@@ -283,13 +283,48 @@ layout: section
 
 # REPL
 
-- Read evaluate print loop
-- One environment for entire program
+<v-clicks>
 
+- Read Eval Print Loop
+- Reads input from terminal
+- Each statement goes through the lexer, parser, evaluator, than loops
+</v-clicks>
+---
+layout: section
 ---
 
+# REPL
 
+```js
+scanner := bufio.NewScanner(in)
+env := object.NewEnvironment()
+for {
+  fmt.Fprintf(out, PROMPT)
+  scanned := scanner.Scan()
+  if !scanned {
+    return
+  }
+  line := scanner.Text()
+  l := lexer.New(line)
+  p := parser.New(l)
+  program := p.ParseProgram()
+  if len(p.Errors()) != 0 {
+    printParserErrors(out, p.Errors())
+    continue
+  }
+  evaluated := evaluator.Eval(program, env)
+  if evaluated != nil {
+    io.WriteString(out, evaluated.Inspect())
+    io.WriteString(out, "\n")
+  }
 
+```
+
+---
+layout: section
+---
+
+# Syntax Highligher
 
 ---
 layout: section
@@ -306,41 +341,38 @@ layout: section
 
 </v-clicks>
 
-<!--
-Let dinesh take over this slide for explanation.
-
-It discusses about how the memory management is relegated to our host language: Go.
--->
-
+---
+layout: section
 ---
 
+# Running the program
+
+- Clone repo to local machine
+- Open folder in VSCode or other IDE
+- Ensure your in the root directory of the project
+- Run the following commands
+
+```
+cd internal
+go run main.go
+```
+<br>
+
+- REPL will start running
+
+```
+Hello JOEYS-PC\gympr! This is the YARTBML programming language!
+Feel free to type in commands
+>>
+```
+<br>
+
+- Enter YARTBML code
+
 ---
-layout: statement
+layout: section
 ---
-
-# Language Development Tools
-
-<!--
-Paul
--->
-
----
-layout: statement
----
-
-# REPL
-## Read-Eval-Print Loop
-Allows you to quickly test line-by-line code snippets in the terminal
-
----
-layout: statement
----
-
-# Syntax Highlighting
-<br/>
-Code with confidence by being able to read you code in colors which provide context.
-
-Built for popular editors like: VSCode, Sublime*, NeoVim*
-
 
 # Thank You
+
+---
