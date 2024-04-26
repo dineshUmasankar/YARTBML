@@ -124,9 +124,10 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 
 	stmt.Value = p.parseExpression(LOWEST)
 
-	if p.peekTokenIs(token.SEMICOLON) {
-		p.nextToken()
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
 	}
+
 	return stmt
 }
 
@@ -138,8 +139,8 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 
 	stmt.ReturnValue = p.parseExpression(LOWEST)
 
-	if p.peekTokenIs(token.SEMICOLON) {
-		p.nextToken()
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
 	}
 
 	return stmt
@@ -261,8 +262,8 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 
 	// SEMICOLON is optional, so we can do operations like `5 + 5`.
 	// Useful for REPL.
-	if p.peekTokenIs(token.SEMICOLON) {
-		p.nextToken()
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
 	}
 
 	return stmt
