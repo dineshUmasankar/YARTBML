@@ -92,23 +92,8 @@ For Penn State's CMPSC 470: Compiler Construction, We are following Thorsten Bal
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- USAGE EXAMPLES -->
 ## Usage
-
-1. Press `.` on keyboard
-
-OR 
-
-1. Open Codespaces
-
-![Codespaces](assets/codespaces.png)
-
-2. Navigate to main.go(`cd internal/`)
-
-3. Run Go(`go run .`)
-
 
 ```js
 // Integers & arithmetic expressions...
@@ -189,6 +174,21 @@ Don't forget to give the project a star! Thanks again!
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+
+<!--  Development Setup -->
+## Development Setup
+1. [Install Go](https://go.dev/doc/install)
+
+1. Clone git repository (`git clone github.com/dineshUmasankar/YARTBML`)
+
+<!-- Interpreter Install -->
+## Interpreter Installation
+
+1. Press `.` to open Codespaces (in GitHub)
+
+2. Navigate to main.go(`cd internal/`)
+
+3. Run Go(`go run .`)
 
 <!-- LICENSE -->
 ## License
