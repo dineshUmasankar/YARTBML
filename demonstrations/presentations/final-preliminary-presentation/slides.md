@@ -50,8 +50,102 @@ Minimally Functional-Paradigm Inspired Language (Based on SMoL)
 
 </v-clicks>
 
+<!--
+* SMoL (Standard Model of Languages) - Closures, Variables, Control Structure, Recursion, Functions
+
+Joe
+-->
+
 ---
 layout: section
+---
+
+# **Let's Prove It**
+
+---
+
+# File Format
+
+<br/>
+<v-clicks>
+
+- To start writing code in YARTBML, make a `.ybml` file.
+- All programs will be interpreted under UTF-8, and English Alphanumeric Characters only.
+- Let's make an example fibonacci program.
+
+</v-clicks>
+
+<!--
+.ybml
+UTF-8
+
+Paul
+-->
+
+---
+layout: section
+---
+
+# Fibonacci Program
+
+<div class="font-italic text-sm">fibonacci.ybml</div>
+```js {1|2-4|5-9|13|all}
+let fibonacci = fn(x) {
+    if (x == 0) {
+        return 0;
+    } else {
+        if (x == 1) {
+            return 1;
+        } else {
+            fibonacci(x - 1) + fibonacci(x - 2);
+        }
+    }
+};
+
+puts(fibonacci(10)) // Displays "55".
+```
+
+<!--
+Explain each highlighted section as it showcases various aspects of the language
+
+puts - print
+Dinesh
+-->
+
+---
+layout: section
+---
+
+# **Core Language Principles**
+
+<!--
+Joe
+-->
+
+---
+layout: statement
+---
+
+# Parsing
+Pratt Parsing Technique (form of Recursive Descent)
+
+<!--
+Helpful for processing infix expressions using Pratt Parsing Technique
+
+Joe
+-->
+
+---
+layout: statement
+---
+
+# Interpreter / Evaluator
+Tree-Walking Interpreter using the AST (Abstract Syntax Tree)
+
+<!--
+Joe
+-->
+
 ---
 
 # Data Types
@@ -154,180 +248,22 @@ Dinesh
 
 </v-clicks>
 
----
-layout: section
----
-# **Project Components**
----
-
-# Lexer
-
 <br/>
-<v-clicks>
-
-- Purpose is to tokenize text so parser can create an AST
-- A token is a struct that holds a type and literal
-
-</v-clicks>
-<v-clicks>
-
-```js
-type Token struct {
-	Type    TokenType
-	Literal string
-}
-```
-
-</v-clicks>
-<v-clicks>
-
-- Lexer increments over each char in input string
-- Tokenizes: Operators, delimiters, identifiers, keywords, and numbers
-
-</v-clicks>
 
 <v-clicks>
 
-```js
->> let x = 5
-{Type:LET Literal:let}
-{Type:IDENT Literal:x}
-{Type:= Literal:=}
-{Type:INT Literal:5}
->>
-```
+- **(FUTURE)** *Operator Support for `<=` and `>=`*
+- **(FUTURE)** *Logical Operator Support: `&&` and `||`*
 
 </v-clicks>
+
+<!--
+Joe
+-->
 
 ---
 layout: image-right
-image: AST.png
----
-
-# Parser
-
-<v-clicks>
-
-- Pratt parsing
-- The image represents ```let x = 5``` as an AST
-- Input are tokens from lexer
-- Tokens get parsed and nodes are created
-
-</v-clicks>
-<v-clicks>
-
-```js
-type LetStatement struct {
-  Token token.Token // token.LET token
-  Name  *Identifier
-  Value Expression
-}
-```
-
-</v-clicks>
-<v-clicks>
-
-- AST is built by appending nodes to a list
-
-</v-clicks>
-
-<v-clicks>
-
-```js
-stmt := p.parseStatement()
-if stmt != nil {
-  program.Statements = append(program.Statements, stmt)
-}
-p.nextToken()
-
-```
-
-</v-clicks>
----
-layout: section
----
-
-# Evaluator
-
-<v-clicks>
-
-- Tree walks AST
-- Start from root of AST and recurisvely evaluate each node
-- Values are represented as objects to be passed through evaluator
-- Environment holds identifier bindings
-
-</v-clicks>
-
-<v-clicks>
-
-```js
-func Eval(node ast.Node, env *object.Environment) object.Object {
-	switch node := node.(type) {
-	// Statements
-	case *ast.Program:
-		return evalProgram(node, env)
-
-	case *ast.ExpressionStatement:
-		return Eval(node.Expression, env)
-
-	case *ast.IntegerLiteral:
-		return &object.Integer{Value: node.Value}
-
-```
-
-</v-clicks>
-
----
-layout: section
----
-
-# REPL
-
-<v-clicks>
-
-- Read Eval Print Loop
-- Reads input from terminal
-- Each statement goes through the lexer, parser, evaluator, than loops
-</v-clicks>
----
-layout: section
----
-
-# REPL
-
-```js
-scanner := bufio.NewScanner(in)
-env := object.NewEnvironment()
-for {
-  fmt.Fprintf(out, PROMPT)
-  scanned := scanner.Scan()
-  if !scanned {
-    return
-  }
-  line := scanner.Text()
-  l := lexer.New(line)
-  p := parser.New(l)
-  program := p.ParseProgram()
-  if len(p.Errors()) != 0 {
-    printParserErrors(out, p.Errors())
-    continue
-  }
-  evaluated := evaluator.Eval(program, env)
-  if evaluated != nil {
-    io.WriteString(out, evaluated.Inspect())
-    io.WriteString(out, "\n")
-  }
-
-```
-
----
-layout: section
----
-
-# Syntax Highligher
-
----
-layout: section
+image: golang.png
 ---
 
 # Memory Management
@@ -341,38 +277,254 @@ layout: section
 
 </v-clicks>
 
+<!--
+Let dinesh take over this slide for explanation.
+
+It discusses about how the memory management is relegated to our host language: Go.
+-->
+
+---
+
+# Built-In Functions
+
+<br/>
+
+<v-clicks>
+
+- `len`: gets length of characters in string or elements in array
+- `first`: gets first element within array
+- `last`: gets last element within array
+- `rest`: gets rest of elements within array
+- `push`: pushes an element at index 0 *(prepend)*
+- `puts`: display object to terminal *(print)*
+
+</v-clicks>
+
+<!--
+Dinesh
+-->
+
+---
+layout: statement
+---
+
+# Language Development Tools
+
+<!--
+Paul
+-->
+
+---
+layout: statement
+---
+
+# REPL
+## Read-Eval-Print Loop
+Allows you to quickly test line-by-line code snippets in the terminal
+
+<!--
+Paul
+-->
+
+---
+layout: statement
+---
+
+# CLI Build Tool
+<br/>
+Executable Interpreter that takes in flags to interpret whole `.ybml` code files
+
+Can be integrated with build-automation tools. *(CI/CD)*
+
+<!--
+You can setup GitHub Runners and automated build tools to download the interpreter binary on every pull request and test the codebase by running the changed files through the interpreter in order to evaluate if YARTBML program works.
+
+Joe
+-->
+
+---
+layout: statement
+---
+
+# Syntax Highlighting
+<br/>
+Code with confidence by being able to read you code in colors which provide context.
+
+Built for popular editors like: VSCode, Sublime*, NeoVim*
+
+<!--
+VSCode will use TextMate Grammar which is based on the "Oniguruma" Dialect which can be tested via Ruby's Regular Expression. The grammar will be written in a JSON Definition that will then have to be built into a VSCode Extension.
+
+Sublime Syntax Highlighting is defined through the same grammar, however has its own YAML style.
+
+NeoVim also supports TextMate Grammar but it has its own quirks when it comes to registering syntax highlighting.
+Paul
+-->
+
 ---
 layout: section
 ---
 
-# Running the program
+# **Team Responsibilities**
 
-- Clone repo to local machine
-- Open folder in VSCode or other IDE
-- Ensure your in the root directory of the project
-- Run the following commands
-
-```
-cd internal
-go run main.go
-```
-<br>
-
-- REPL will start running
-
-```
-Hello JOEYS-PC\gympr! This is the YARTBML programming language!
-Feel free to type in commands
->>
-```
-<br>
-
-- Enter YARTBML code
+<!--
+Dinesh
+-->
 
 ---
-layout: section
+layout: image-right
+image: docgen.png
+---
+
+# Everyone is Responsible for:
+
+<v-clicks>
+
+- Testing: Done via Go's Testing Framework
+
+- Documentation: Written in Markdown, Automated Release
+
+</v-clicks>
+
+<!--
+Dinesh
+-->
+
+---
+
+# Core Language
+<br/>
+
+<v-clicks>
+
+- Tokenizer & Lexer -> Joesph Porrino
+- Parser & AST -> Katherine Banis
+- Evaluator & Environment & Object & Built-In Functions -> Dinesh Umasankar
+
+</v-clicks>
+
+<br/>
+
+<v-clicks>
+
+- **(FUTURE)** *Compile to Bytecode and Create Custom Stack-Based Virtual Machine*
+- **(FUTURE)** *Compile to WASM & Build Browser-Based Coding Environment*
+
+</v-clicks>
+
+<!--
+Joe
+-->
+
+---
+
+# Automated Quality Assurance Tools
+
+<br/>
+
+<v-clicks>
+
+- Automated Testing Environment -> Dinesh Umasankar
+- Automated Documentation -> Dinesh Umasankar
+- Automated Interpreter Binary Release -> Dinesh Umasankar
+
+</v-clicks>
+
+<!--
+Dinesh
+-->
+
+---
+
+# Developer Experience
+<br/>
+<v-clicks>
+
+- Syntax Highlighter -> Paul Jensen
+
+</v-clicks>
+
+<br/>
+
+<v-clicks>
+
+- **(FUTURE)** *Language Server Implementation (Autocomplete, Go-To Definition, In-Editor Documentation, etc.)*
+
+</v-clicks>
+
+<!--
+Paul
+-->
+
+---
+
+# Future Aspirations
+<br/>
+<v-clicks>
+
+- Support for logical `&&` and `||` Operators
+- Support for `<=` and `>=` Operators
+- Support for `%` (modulo) Operator
+- Support for `++` and `--` Postfix Operators
+- Support for Floating Point Operations
+- Support for Macros
+- Support for Loops
+- Support for Regular Expressions
+
+</v-clicks>
+
+<!--
+Easiest Aspirations that we could possibly reach as the implementation has been mostly thought out.
+
+Joe
+-->
+
+---
+
+# Future Aspirations
+<br/>
+<v-clicks>
+
+- Support for Import / Export Modules
+- Language Server Protocol Implementation (Autocomplete, Go-To Definition, In-Editor Documentation, etc.)
+- Improve Error Reporting
+- Compile to WASM to allow for browser-based coding environment
+- Compile the code into a bytecode definition and compute via Custom Stack-Based Virtual Machine
+- Create Browser-Based Programming Tutorial
+
+</v-clicks>
+
+<!--
+Medium Difficulty of Aspirations that we could possibly do with moderate amounts of research accomplished.
+
+Paul
+-->
+
+---
+
+# Future Aspirations
+<br/>
+<v-clicks>
+
+- Support for Concurrency (Requires Design Decision & Thoughts)
+- Support for File I/O (Requires Design Decision & Thoughts)
+- Investigation & Support for Type Systems
+- Language Branding Page (About, Install, Documentation, Community, Development)
+
+</v-clicks>
+
+<!--
+Hardest Difficulty of Aspirations that we could possibly do but will require major amounts of research and design decisions that could possibly be controversial.
+
+Let Dinesh Talk about the differences of Concurrency Models.
+* Differences between syscalls on each architecture and each operating system's quirks
+* Differences between I/O (permission bits and file architectures between operating systems)
+
+Dinesh
+-->
+
+---
+layout: fact
 ---
 
 # Thank You
-
----
