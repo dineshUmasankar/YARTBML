@@ -10,7 +10,7 @@ import (
 var builtins = map[string]*object.Builtin{
 
 	// 'len' returns the length of an array or string
-	// Expectes exactly one argument and returns an error if provided argument is not an array or string
+	// Expects exactly one argument and returns an error if provided argument is not an array or string
 	"len": &object.Builtin{
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
@@ -24,7 +24,7 @@ var builtins = map[string]*object.Builtin{
 			case *object.String:
 				return &object.Integer{Value: int64(len(arg.Value))}
 			default:
-				return newError("argument to `len` not supported, got%s",
+				return newError("argument to `len` not supported, got %s",
 					args[0].Type())
 			}
 
@@ -123,6 +123,8 @@ var builtins = map[string]*object.Builtin{
 			return &object.Array{Elements: newElements}
 		},
 	},
+
+	// 'puts' displays an element to stdout (prints to console)
 	"puts": &object.Builtin{
 		Fn: func(args ...object.Object) object.Object {
 			for _, arg := range args {

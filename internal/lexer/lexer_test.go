@@ -11,7 +11,7 @@ func TestNextToken(t *testing.T) {
 		let ten = 10;
 
 		let add = fn(x, y) {
-		x + y;
+			x + y;
 		};
 
 		let result = add(five, ten);
@@ -110,14 +110,12 @@ func TestNextToken(t *testing.T) {
 		{token.SEMICOLON, ";"},
 		{token.STRING, "foobar"},
 		{token.STRING, "foo bar"},
-		{token.EOF, ""},
 		{token.LBRACKET, "["},
 		{token.INT, "1"},
 		{token.COMMA, ","},
 		{token.INT, "2"},
 		{token.RBRACKET, "]"},
 		{token.SEMICOLON, ";"},
-		{token.EOF, ""},
 		{token.LBRACE, "{"},
 		{token.STRING, "foo"},
 		{token.COLON, ":"},

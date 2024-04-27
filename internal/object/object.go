@@ -18,14 +18,18 @@ type ObjectType string
 // Constants for each object type.
 // Used with Type() function
 const (
-	INTEGER_OBJ      = "INTEGER"
-	BOOEAN_OBJ       = "BOOLEAN"
 	NULL_OBJ         = "NULL"
-	RETURN_VALUE_OBJ = "RETURN_VALUE"
 	ERROR_OBJ        = "ERROR"
-	FUNCTION_OBJ     = "FUNCTION"
+
+	INTEGER_OBJ      = "INTEGER"
+	BOOLEAN_OBJ       = "BOOLEAN"
 	STRING_OBJ       = "STRING"
+	
+	RETURN_VALUE_OBJ = "RETURN_VALUE"
+	
+	FUNCTION_OBJ     = "FUNCTION"
 	BUILTIN_OBJ      = "BUILTIN"
+
 	ARRAY_OBJ        = "ARRAY"
 	HASH_OBJ         = "HASH"
 )
@@ -46,6 +50,11 @@ type Integer struct {
 func (i *Integer) Inspect() string  { return fmt.Sprintf("%d", i.Value) }
 func (i *Integer) Type() ObjectType { return INTEGER_OBJ }
 
+// HashKey for Integer type, used for keys in hash maps
+func (i *Integer) HashKey() HashKey {
+	return HashKey{Type: i.Type(), Value: uint64(i.Value)}
+}
+
 // Boolean type
 type Boolean struct {
 	Value bool
@@ -54,8 +63,20 @@ type Boolean struct {
 // Receiver functions for Boolean struct
 // Gives boolean struct object interface
 func (b *Boolean) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
-func (b *Boolean) Type() ObjectType { return BOOEAN_OBJ }
+func (b *Boolean) Type() ObjectType { return BOOLEAN_OBJ }
 
+// HashKey for Boolean type, used for keys in hash maps
+func (b *Boolean) HashKey() HashKey {
+	var value uint64
+
+	if b.Value {
+		value = 1 // true Boolean values get a HashKey value of 1
+	} else {
+		value = 0 // false Boolean values get a hashkey value of 0
+	}
+
+	return HashKey{Type: b.Type(), Value: value}
+}
 // Null type
 type Null struct{}
 
@@ -120,6 +141,13 @@ type String struct {
 func (s *String) Type() ObjectType { return STRING_OBJ }
 func (s *String) Inspect() string  { return s.Value }
 
+// HashKey for String type, uses FNV hash to generate a unique identifier
+func (s *String) HashKey() HashKey {
+	h := fnv.New64a()
+	h.Write([]byte(s.Value))
+
+	return HashKey{Type: s.Type(), Value: h.Sum64()}
+}
 // Builtin Type
 type Builtin struct {
 	Fn BuiltinFunction
@@ -152,36 +180,12 @@ func (ao *Array) Inspect() string {
 	return out.String()
 }
 
-// HashKey type
+// Interface meant to be implemented on objects to indicate that we can use this object-value
+// to generate hashes in order to compare against other objects of the same type, and that this
+// object can be represented as the key in key-value.
 type HashKey struct {
 	Type  ObjectType
 	Value uint64
-}
-
-// HashKey for Boolean type, used for keys in hash maps
-func (b *Boolean) HashKey() HashKey {
-	var value uint64
-
-	if b.Value {
-		value = 1 // true Boolean values get a HashKey value of 1
-	} else {
-		value = 0 // false Boolean values get a hashkey value of 0
-	}
-
-	return HashKey{Type: b.Type(), Value: value}
-}
-
-// HashKey for Integer type, used for keys in hash maps
-func (i *Integer) HashKey() HashKey {
-	return HashKey{Type: i.Type(), Value: uint64(i.Value)}
-}
-
-// HashKey for String type, uses FNV hash to generate a unique identifier
-func (s *String) HashKey() HashKey {
-	h := fnv.New64a()
-	h.Write([]byte(s.Value))
-
-	return HashKey{Type: s.Type(), Value: h.Sum64()}
 }
 
 // Represents a key-value pair in a hash map

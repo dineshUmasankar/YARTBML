@@ -498,11 +498,11 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			"add((((a + b) + ((c * d) / f)) + g))",
 		},
 		{
-			"a * [1, 2, 3, 4][b * c] * d",
+			"a * [1, 2, 3, 4][b * c] * d;",
 			"((a * ([1, 2, 3, 4][(b * c)])) * d)",
 		},
 		{
-			"add(a * b[2], b[1], 2 * [1, 2][1])",
+			"add(a * b[2], b[1], 2 * [1, 2][1]);",
 			"add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))",
 		},
 	}
@@ -860,7 +860,7 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 }
 
 func TestStringLiteralExpression(t *testing.T) {
-	input := `"hello world*;"`
+	input := `"hello world";`
 
 	l := lexer.New(input)
 	p := New(l)
@@ -879,7 +879,7 @@ func TestStringLiteralExpression(t *testing.T) {
 }
 
 func TestParsingArrayLiterals(t *testing.T) {
-	input := "[1, 2, * 2, 3 + 3]"
+	input := "[1, 2 * 2, 3 + 3];"
 
 	l := lexer.New(input)
 	p := New(l)
@@ -887,7 +887,7 @@ func TestParsingArrayLiterals(t *testing.T) {
 	checkParserErrors(t, p)
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-	array, ok := stmtm.Expression(*ast.ArrayLiteral)
+	array, ok := stmt.Expression.(*ast.ArrayLiteral)
 	if !ok {
 		t.Fatalf("exp not ast.ArrayLiteral. got=%T", stmt.Expression)
 	}
@@ -902,7 +902,7 @@ func TestParsingArrayLiterals(t *testing.T) {
 }
 
 func TestParsingIndexExpressions(t *testing.T) {
-	input := "myArray[1 + 1]"
+	input := "myArray[1 + 1];"
 
 	l := lexer.New(input)
 	p := New(l)
@@ -924,7 +924,7 @@ func TestParsingIndexExpressions(t *testing.T) {
 }
 
 func TestParsingHashLiteralStringKeys(t *testing.T) {
-	input := `{"one": 1, "two": 2, "three": 3}`
+	input := `{"one": 1, "two": 2, "three": 3};`
 
 	l := lexer.New(input)
 	p := New(l)
@@ -960,7 +960,7 @@ func TestParsingHashLiteralStringKeys(t *testing.T) {
 }
 
 func TestParsingEmptyHashLiteral(t *testing.T) {
-	input := "{}"
+	input := "{};"
 
 	l := lexer.New(input)
 	p := New(l)
@@ -979,7 +979,7 @@ func TestParsingEmptyHashLiteral(t *testing.T) {
 }
 
 func TestParsingHashLiteralsWithExpressions(t *testing.T) {
-	input := `{"one": 0 + 1, "two": 10 - 8, "three": 15 / 5}`
+	input := `{"one": 0 + 1, "two": 10 - 8, "three": 15 / 5};`
 
 	l := lexer.New(input)
 	p := New(l)

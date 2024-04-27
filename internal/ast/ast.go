@@ -424,7 +424,7 @@ func (ie *IfExpression) String() string {
 //
 //	let myFunction = fn (x, y) { return x + y; };
 //
-//	fn () {
+//	fn() {
 //		return fn(x, y) { return x > y; };
 //	};
 //
@@ -525,7 +525,7 @@ func (sl *StringLiteral) String() string { return sl.Token.Literal }
 
 // ArrayLiteral Node to represent Arrays(s)
 // as an Expression Value-Type in our AST.
-// ex. [1, 2, 3, + 3, fn(x) { x }, add(2, 2)]
+// ex. [1, 2, 3 + 3, fn(x) { x }, add(2, 2)]
 type ArrayLiteral struct {
 	Token    token.Token // the '[' token
 	Elements []Expression
@@ -560,8 +560,8 @@ func (al *ArrayLiteral) String() string {
 //
 //	  	let myArray = [1, 2, 3, 4];
 //	 	myArray[2];
-//		    myArray[2 + 1];
-//		    returnsArray()[1];
+//		myArray[2 + 1];
+//		returnsArray()[1];
 //
 // basic structure is <expression>[<expression>]
 type IndexExpression struct {

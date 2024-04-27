@@ -3,10 +3,9 @@
 package evaluator
 
 import (
-	"fmt"
-
 	"YARTBML/ast"
 	"YARTBML/object"
+	"fmt"
 )
 
 // Creates error objects with given message
@@ -332,8 +331,13 @@ func evalExpressions(
 // Returns result of the function call
 func applyFunction(fn object.Object, args []object.Object) object.Object {
 	switch fn := fn.(type) {
-
 	case *object.Function:
+		if len(fn.Parameters) != len(args) {
+			return newError(
+				"wrong number of arguments. want=%d. got=%d",
+				len(fn.Parameters),
+				len(args))
+		}
 		extendedEnv := extendFunctionEnv(fn, args)
 		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
@@ -344,6 +348,21 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 	default:
 		return newError("not a functionL %s", fn.Type())
 	}
+
+	// function, ok := fn.(*object.Function)
+	// if !ok {
+	// 	return newError("not a function: %s", fn.Type())
+	// }
+	// if len(function.Parameters) != len(args) {
+	// 	return newError(
+	// 		"wrong number of arguments. want=%d. got=%d",
+	// 		len(function.Parameters),
+	// 		len(args))
+	// }
+
+	// extendedEnv := extendFunctionEnv(function, args)
+	// evaluated := Eval(function.Body, extendedEnv)
+	// return unwrapReturnValue(evaluated)
 }
 
 // Extends the enviornment with a new enclosed enviornment
@@ -354,9 +373,11 @@ func extendFunctionEnv(
 	args []object.Object,
 ) *object.Environment {
 	env := object.NewEnclosedEnvironment(fn.Env)
+
 	for paramIdx, param := range fn.Parameters {
 		env.Set(param.Value, args[paramIdx])
 	}
+
 	return env
 }
 

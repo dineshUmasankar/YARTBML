@@ -162,8 +162,8 @@ func (l *Lexer) peekChar() byte {
 	}
 }
 
-// reads a string literal from the input, starting and ending with quotation mark
-// handles reading characters until another quote reaches end of file
+// Reads a string literal from the input, starting and ending with quotation mark
+// Handles reading characters until another quote reaches end of file
 func (l *Lexer) readString() string {
 	position := l.position + 1
 	for {

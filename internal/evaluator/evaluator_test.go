@@ -8,6 +8,14 @@ import (
 	"YARTBML/parser"
 )
 
+func testEval(input string) object.Object {
+	l := lexer.New(input)
+	p := parser.New(l)
+	program := p.ParseProgram()
+	env := object.NewEnvironment()
+	return Eval(program, env)
+}
+
 func TestEvalIntegerExpression(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -33,14 +41,6 @@ func TestEvalIntegerExpression(t *testing.T) {
 		evaluated := testEval(tt.input)
 		testIntegerObject(t, evaluated, tt.expected)
 	}
-}
-
-func testEval(input string) object.Object {
-	l := lexer.New(input)
-	p := parser.New(l)
-	program := p.ParseProgram()
-	env := object.NewEnvironment()
-	return Eval(program, env)
 }
 
 func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
@@ -203,7 +203,7 @@ func TestErrorHandling(t *testing.T) {
 			"unknown operator: BOOLEAN + BOOLEAN",
 		},
 		{
-			"5; true + false; 5",
+			"5; true + false; 5;",
 			"unknown operator: BOOLEAN + BOOLEAN",
 		},
 		{
@@ -226,24 +226,28 @@ func TestErrorHandling(t *testing.T) {
 			"identifier not found: foobar",
 		},
 		{
-			"let x = fn(x, y) { x + y;}; x(1);",
+			"let x = fn(x, y) { return x + y; }; x(1);",
 			"wrong number of arguments. want=2. got=1",
 		},
 		{
-			"let x = fn(x, y) { x + y;}; x(1, 2, 3);",
+			"let x = fn(x, y) { return x + y;}; x(1, 2, 3);",
 			"wrong number of arguments. want=2. got=3",
 		},
 		{
-			`"Hello" - "World"`,
+			"let x = fn(x, y) { return x + y; }; x(1, 2, 3);",
+			"wrong number of arguments. want=2. got=3",
+		},
+		{
+			`"Hello" - "World";`,
 			"unknown operator: STRING - STRING",
 		},
 		{
-			`{"name": "YARTBML"}[fn(x) { x }];`,
+			`{"name": "YARTBML"}[fn(x) { return x; }];`,
 			"unusable as hash key: FUNCTION",
 		},
 		{
-			"let x = fn(x, y) { x + y; }; x(1, 2, 3);",
-			"wrong number of arguments. want=2. got=3",
+			`{"name": "YARTBML"}[puts("")];`,
+			"unusable as hash key: NULL",
 		},
 	}
 	for _, tt := range tests {
@@ -326,12 +330,12 @@ func TestClosures(t *testing.T) {
 }
 
 func TestStringLiteral(t *testing.T) {
-	input := `"Hello World!"`
+	input := `"Hello World!";`
 
 	evaluated := testEval(input)
 	str, ok := evaluated.(*object.String)
 	if !ok {
-		t.Fatalf("object is not String. got=%T", evaluated, evaluated)
+		t.Fatalf("object is not String. got=%T", evaluated)
 	}
 
 	if str.Value != "Hello World!" {
@@ -361,7 +365,8 @@ func TestBuiltinFunctions(t *testing.T) {
 		{`len("");`, 0},
 		{`len("four");`, 4},
 		{`len("hello world");`, 11},
-		{`len(1)`, "argument to `len` not supported, got INTEGER"}, {`len("one", "two")`, "wrong number of arguments. got=2, want=1"},
+		{`len(1);`, "argument to `len` not supported, got INTEGER"}, 
+		{`len("one", "two");`, "wrong number of arguments. got=2, want=1"},
 	}
 
 	for _, tt := range tests {
@@ -384,7 +389,7 @@ func TestBuiltinFunctions(t *testing.T) {
 }
 
 func TestArrayLiterals(t *testing.T) {
-	input := "[1, 2 * 2, 3 + 3]"
+	input := "[1, 2 * 2, 3 + 3];"
 
 	evaluated := testEval(input)
 	result, ok := evaluated.(*object.Array)
@@ -408,15 +413,15 @@ func TestArrayIndexExpressions(t *testing.T) {
 		expected interface{}
 	}{
 		{
-			"[1, 2, 3][0]",
+			"[1, 2, 3][0];",
 			1,
 		},
 		{
-			"[1, 2, 3][1]",
+			"[1, 2, 3][1];",
 			2,
 		},
 		{
-			"[1, 2, 3][2]",
+			"[1, 2, 3][2];",
 			3,
 		},
 		{
@@ -436,15 +441,15 @@ func TestArrayIndexExpressions(t *testing.T) {
 			6,
 		},
 		{
-			"let myArray = [1, 2, 3]; let i = myArray[0]; myArray[i]",
+			"let myArray = [1, 2, 3]; let i = myArray[0]; myArray[i];",
 			2,
 		},
 		{
-			"[1, 2, 3][3]",
+			"[1, 2, 3][3];",
 			nil,
 		},
 		{
-			"[1, 2, 3][-1]",
+			"[1, 2, 3][-1];",
 			nil,
 		},
 	}
@@ -469,7 +474,7 @@ func TestHashLiterals(t *testing.T) {
 		"thr" + "ee": 6 / 2, 4: 4,
 		true: 5,
 		false: 6
-	}`
+	};`
 
 	evaluated := testEval(input)
 	result, ok := evaluated.(*object.Hash)
@@ -506,31 +511,31 @@ func TestHashIndexExpressions(t *testing.T) {
 		expected interface{}
 	}{
 		{
-			`{"foo": 5}["foo"]`,
+			`{"foo": 5}["foo"];`,
 			5,
 		},
 		{
-			`{"foo": 5}["bar"]`,
+			`{"foo": 5}["bar"];`,
 			nil,
 		},
 		{
-			`let key = "foo"; {"foo": 5}[key]`,
+			`let key = "foo"; {"foo": 5}[key];`,
 			5,
 		},
 		{
-			`{}["foo"]`,
+			`{}["foo"];`,
 			nil,
 		},
 		{
-			`{5: 5}[5]`,
+			`{5: 5}[5];`,
 			5,
 		},
 		{
-			`{true: 5}[true]`,
+			`{true: 5}[true];`,
 			5,
 		},
 		{
-			`{false: 5}[false]`,
+			`{false: 5}[false];`,
 			5,
 		},
 	}
