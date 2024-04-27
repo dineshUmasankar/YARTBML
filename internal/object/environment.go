@@ -1,7 +1,6 @@
 // The environment adds support for keeping track of bindings
 // Bindings are assigned using let statements. A variable is bound to value.
-// The enviornment is passed along when evaluating expressions.
-
+// The environment is passed along when evaluating expressions.
 package object
 
 func NewEnclosedEnvironment(outer *Environment) *Environment {

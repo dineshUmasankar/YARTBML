@@ -3,10 +3,9 @@
 package evaluator
 
 import (
-	"fmt"
-
 	"YARTBML/ast"
 	"YARTBML/object"
+	"fmt"
 )
 
 // Creates error objects with given message
@@ -30,11 +29,32 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.Program:
 		return evalProgram(node, env)
 
+	case *ast.BlockStatement:
+		return evalBlockStatement(node, env)
+
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression, env)
 
+	case *ast.ReturnStatement:
+		val := Eval(node.ReturnValue, env)
+		if isError(val) {
+			return val
+		}
+		return &object.ReturnValue{Value: val}
+
+	case *ast.LetStatement:
+		val := Eval(node.Value, env)
+		if isError(val) {
+			return val
+		}
+		env.Set(node.Name.Value, val)
+
+	// Expressions
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value}
+
+	case *ast.StringLiteral:
+		return &object.String{Value: node.Value}
 
 	case *ast.BooleanLiteral:
 		return nativeBoolToBooleanObject(node.Value)
@@ -57,25 +77,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 		return evalInfixExpression(node.Operator, left, right)
 
-	case *ast.BlockStatement:
-		return evalBlockStatement(node, env)
-
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
-
-	case *ast.ReturnStatement:
-		val := Eval(node.ReturnValue, env)
-		if isError(val) {
-			return val
-		}
-		return &object.ReturnValue{Value: val}
-
-	case *ast.LetStatement:
-		val := Eval(node.Value, env)
-		if isError(val) {
-			return val
-		}
-		env.Set(node.Name.Value, val)
 
 	case *ast.Identifier:
 		return evalIdentifier(node, env)
@@ -95,7 +98,29 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return args[0]
 		}
 		return applyFunction(function, args)
+
+	case *ast.ArrayLiteral:
+		elements := evalExpressions(node.Elements, env)
+		if len(elements) == 1 && isError(elements[0]) {
+			return elements[0]
+		}
+		return &object.Array{Elements: elements}
+
+	case *ast.IndexExpression:
+		left := Eval(node.Left, env)
+		if isError(left) {
+			return left
+		}
+		index := Eval(node.Index, env)
+		if isError(index) {
+			return index
+		}
+		return evalIndexExpression(left, index)
+
+	case *ast.HashLiteral:
+		return evalHashLiteral(node, env)
 	}
+
 	return nil
 }
 
@@ -158,6 +183,8 @@ func evalInfixExpression(
 	case left.Type() != right.Type():
 		return newError("type mismatch: %s %s %s",
 			left.Type(), operator, right.Type())
+	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
+		return evalStringInfixExpression(operator, left, right)
 	default:
 		return newError("unknown operator: %s %s %s",
 			left.Type(), operator, right.Type())
@@ -269,11 +296,15 @@ func evalIdentifier(
 	node *ast.Identifier,
 	env *object.Environment,
 ) object.Object {
-	val, ok := env.Get(node.Value)
-	if !ok {
-		return newError("identifier not found: " + node.Value)
+	if val, ok := env.Get(node.Value); ok {
+		return val
 	}
-	return val
+
+	if builtin, ok := builtins[node.Value]; ok {
+		return builtin
+	}
+
+	return newError("identifier not found: " + node.Value)
 }
 
 // Evaluates a list of expressions
@@ -299,21 +330,39 @@ func evalExpressions(
 // then evaluates the function body.
 // Returns result of the function call
 func applyFunction(fn object.Object, args []object.Object) object.Object {
-	function, ok := fn.(*object.Function)
-	if !ok {
-		return newError("not a function: %s", fn.Type())
-	}
-	if len(function.Parameters) != len(args) {
-		return newError(
-			"wrong number of arguments. want=%d. got=%d",
-			len(function.Parameters),
-			len(args))
+	switch fn := fn.(type) {
+	case *object.Function:
+		if len(fn.Parameters) != len(args) {
+			return newError(
+				"wrong number of arguments. want=%d. got=%d",
+				len(fn.Parameters),
+				len(args))
+		}
+		extendedEnv := extendFunctionEnv(fn, args)
+		evaluated := Eval(fn.Body, extendedEnv)
+		return unwrapReturnValue(evaluated)
+
+	case *object.Builtin:
+		return fn.Fn(args...)
+
+	default:
+		return newError("not a functionL %s", fn.Type())
 	}
 
-	extendedEnv := extendFunctionEnv(function, args)
-	evaluated := Eval(function.Body, extendedEnv)
-	return unwrapReturnValue(evaluated)
+	// function, ok := fn.(*object.Function)
+	// if !ok {
+	// 	return newError("not a function: %s", fn.Type())
+	// }
+	// if len(function.Parameters) != len(args) {
+	// 	return newError(
+	// 		"wrong number of arguments. want=%d. got=%d",
+	// 		len(function.Parameters),
+	// 		len(args))
+	// }
 
+	// extendedEnv := extendFunctionEnv(function, args)
+	// evaluated := Eval(function.Body, extendedEnv)
+	// return unwrapReturnValue(evaluated)
 }
 
 // Extends the enviornment with a new enclosed enviornment
@@ -324,9 +373,11 @@ func extendFunctionEnv(
 	args []object.Object,
 ) *object.Environment {
 	env := object.NewEnclosedEnvironment(fn.Env)
+
 	for paramIdx, param := range fn.Parameters {
 		env.Set(param.Value, args[paramIdx])
 	}
+
 	return env
 }
 
@@ -336,4 +387,102 @@ func unwrapReturnValue(obj object.Object) object.Object {
 		return returnValue.Value
 	}
 	return obj
+}
+
+// Evaluates infix expression for string operands
+// Supports "+" operator for string concatenation
+// Returns an error if the operator is not supported for strings
+func evalStringInfixExpression(
+	operator string,
+	left, right object.Object,
+) object.Object {
+	if operator != "+" {
+		return newError("unknown operator: %s %s %s",
+			left.Type(), operator, right.Type())
+	}
+
+	leftVal := left.(*object.String).Value
+	rightVal := right.(*object.String).Value
+	return &object.String{Value: leftVal + rightVal}
+}
+
+// Handles indexing for arrays and hashes
+// Delegates to the specific functions based on the object type being indexed
+func evalIndexExpression(left, index object.Object) object.Object {
+	switch {
+	case left.Type() == object.ARRAY_OBJ && index.Type() == object.INTEGER_OBJ:
+		return evalArrayIndexExpression(left, index)
+	case left.Type() == object.HASH_OBJ:
+		return evalHashIndexExpression(left, index)
+	default:
+		return newError("index operator not supported: %s", left.Type())
+	}
+}
+
+// Retrieves an element at a specific index from an array
+// Checks for out-of-bounds access and returns NULL if index is invalid
+// Supports negative indexing which counts from the end of the array
+func evalArrayIndexExpression(array, index object.Object) object.Object {
+	arrayObject := array.(*object.Array)
+	idx := index.(*object.Integer).Value
+	max := int64(len(arrayObject.Elements) - 1)
+
+	if idx < 0 || idx > max {
+		return NULL
+	}
+
+	return arrayObject.Elements[idx]
+}
+
+// Evaluates hash literals to produce a hash object
+// Iterates over each key-value pair in the literal, evaluating both the key and the value
+// Keys must be hashable (i.e. implement the Hashable interface)
+// Returns a hash object containing the evalauted keys and values
+func evalHashLiteral(
+	node *ast.HashLiteral,
+	env *object.Environment,
+) object.Object {
+	pairs := make(map[object.HashKey]object.HashPair)
+
+	for keyNode, valueNode := range node.Pairs {
+		key := Eval(keyNode, env)
+		if isError(key) {
+			return key
+		}
+
+		hashKey, ok := key.(object.Hashable)
+		if !ok {
+			return newError("unusable as hash key: %s", key.Type())
+		}
+
+		value := Eval(valueNode, env)
+		if isError(value) {
+			return value
+		}
+
+		hashed := hashKey.HashKey()
+		pairs[hashed] = object.HashPair{Key: key, Value: value}
+	}
+
+	return &object.Hash{Pairs: pairs}
+}
+
+// Retrieves a value from a hash using a specified index
+// Index must be hashable.
+// Returns the value associated with hashed index.
+// Returns NUll if index does not exist in hash
+func evalHashIndexExpression(hash, index object.Object) object.Object {
+	hashObject := hash.(*object.Hash)
+
+	key, ok := index.(object.Hashable)
+	if !ok {
+		return newError("unusable as hash key: %s", index.Type())
+	}
+
+	pair, ok := hashObject.Pairs[key.HashKey()]
+	if !ok {
+		return NULL
+	}
+
+	return pair.Value
 }
