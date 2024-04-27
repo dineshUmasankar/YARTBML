@@ -40,4 +40,4 @@ or
 
 1. Open up the extensions panel (`CTRL + SHIFT + X`) and click the `...` at the upper right
 2. Select "Install From VSIX" from the dropdown
-3. Traverse the directory until you reach the current folder, where the generated `.vsix` file should be
+3. Traverse the directory until you reach the current folder, where the generated `yartbml-x.x.x.vsix` file should be
