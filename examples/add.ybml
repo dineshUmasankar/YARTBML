@@ -1,0 +1,5 @@
+let add = fn(a, b) {
+	return a + b;
+};
+
+puts(add(2, 3));

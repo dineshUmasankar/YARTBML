@@ -26,7 +26,6 @@ var (
 // Recursively calls Eval to "tree-walk" the AST
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
-
 	// Statements
 	case *ast.Program:
 		return evalProgram(node, env)

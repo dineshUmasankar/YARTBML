@@ -13,21 +13,21 @@ func TestEvalIntegerExpression(t *testing.T) {
 		input    string
 		expected int64
 	}{
-		{"5", 5},
-		{"10", 10},
-		{"-5", -5},
-		{"-10", -10},
-		{"5 + 5 + 5 + 5 - 10", 10},
-		{"2 * 2 * 2 * 2 * 2", 32},
-		{"-50 + 100 + -50", 0},
-		{"5 * 2 + 10", 20},
-		{"5 + 2 * 10", 25},
-		{"20 + 2 * -10", 0},
-		{"50 / 2 * 2 + 10", 60},
-		{"2 * (5 + 10)", 30},
-		{"3 * 3 * 3 + 10", 37},
-		{"3 * (3 * 3) + 10", 37},
-		{"(5 + 10 * 2 + 15 / 3) * 2 + -10", 50},
+		{"5;", 5},
+		{"10;", 10},
+		{"-5;", -5},
+		{"-10;", -10},
+		{"5 + 5 + 5 + 5 - 10;", 10},
+		{"2 * 2 * 2 * 2 * 2;", 32},
+		{"-50 + 100 + -50;", 0},
+		{"5 * 2 + 10;", 20},
+		{"5 + 2 * 10;", 25},
+		{"20 + 2 * -10;", 0},
+		{"50 / 2 * 2 + 10;", 60},
+		{"2 * (5 + 10);", 30},
+		{"3 * 3 * 3 + 10;", 37},
+		{"3 * (3 * 3) + 10;", 37},
+		{"(5 + 10 * 2 + 15 / 3) * 2 + -10;", 50},
 	}
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)
@@ -64,25 +64,25 @@ func TestEvalBooleanExpression(t *testing.T) {
 		input    string
 		expected bool
 	}{
-		{"true", true},
-		{"false", false},
-		{"1 < 2", true},
-		{"1 > 2", false},
-		{"1 < 1", false},
-		{"1 > 1", false},
-		{"1 == 1", true},
-		{"1 != 1", false},
-		{"1 == 2", false},
-		{"1 != 2", true},
-		{"true == true", true},
-		{"false == false", true},
-		{"true == false", false},
-		{"true != false", true},
-		{"false != true", true},
-		{"(1 < 2) == true", true},
-		{"(1 < 2) == false", false},
-		{"(1 > 2) == true", false},
-		{"(1 > 2) == false", true},
+		{"true;", true},
+		{"false;", false},
+		{"1 < 2;", true},
+		{"1 > 2;", false},
+		{"1 < 1;", false},
+		{"1 > 1;", false},
+		{"1 == 1;", true},
+		{"1 != 1;", false},
+		{"1 == 2;", false},
+		{"1 != 2;", true},
+		{"true == true;", true},
+		{"false == false;", true},
+		{"true == false;", false},
+		{"true != false;", true},
+		{"false != true;", true},
+		{"(1 < 2) == true;", true},
+		{"(1 < 2) == false;", false},
+		{"(1 > 2) == true;", false},
+		{"(1 > 2) == false;", true},
 	}
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)
@@ -109,12 +109,12 @@ func TestBangOperator(t *testing.T) {
 		input    string
 		expected bool
 	}{
-		{"!true", false},
-		{"!false", true},
-		{"!5", false},
-		{"!!true", true},
-		{"!!false", false},
-		{"!!5", true},
+		{"!true;", false},
+		{"!false;", true},
+		{"!5;", false},
+		{"!!true;", true},
+		{"!!false;", false},
+		{"!!5;", true},
 	}
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)
@@ -127,13 +127,13 @@ func TestIfElseExpressions(t *testing.T) {
 		input    string
 		expected interface{}
 	}{
-		{"if (true) { 10 }", 10},
-		{"if (false) { 10 }", nil},
-		{"if (1) { 10 }", 10},
-		{"if (1 < 2) { 10 }", 10},
-		{"if (1 > 2) { 10 }", nil},
-		{"if (1 > 2) { 10 } else { 20 }", 20},
-		{"if (1 < 2) { 10 } else { 20 }", 10},
+		{"if (true) { 10; };", 10},
+		{"if (false) { 10; };", nil},
+		{"if (1) { 10; };", 10},
+		{"if (1 < 2) { 10; };", 10},
+		{"if (1 > 2) { 10; };", nil},
+		{"if (1 > 2) { 10; } else { 20; };", 20},
+		{"if (1 < 2) { 10; } else { 20; };", 10},
 	}
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)
@@ -166,11 +166,11 @@ func TestReturnStatements(t *testing.T) {
 		{
 			`
 			if (10 > 1) {
-			if (10 > 1) {
-			return 10;
-			}
-			return 1;
-			}
+				if (10 > 1) {
+					return 10;
+				};
+				return 1;
+			};
 			`,
 			10,
 		},
@@ -195,7 +195,7 @@ func TestErrorHandling(t *testing.T) {
 			"type mismatch: INTEGER + BOOLEAN",
 		},
 		{
-			"-true",
+			"-true;",
 			"unknown operator: -BOOLEAN",
 		},
 		{
@@ -207,22 +207,22 @@ func TestErrorHandling(t *testing.T) {
 			"unknown operator: BOOLEAN + BOOLEAN",
 		},
 		{
-			"if (10 > 1) { true + false; }",
+			"if (10 > 1) { true + false; };",
 			"unknown operator: BOOLEAN + BOOLEAN",
 		},
 		{
 			`
 			if (10 > 1) {
-			if (10 > 1) {
-			return true + false;
-			}
-			return 1;
-			}
+				if (10 > 1) {
+					return true + false;
+				};
+				return 1;
+			};
 			`,
 			"unknown operator: BOOLEAN + BOOLEAN",
 		},
 		{
-			"foobar",
+			"foobar;",
 			"identifier not found: foobar",
 		},
 		{
@@ -240,6 +240,10 @@ func TestErrorHandling(t *testing.T) {
 		{
 			`{"name": "YARTBML"}[fn(x) { x }];`,
 			"unusable as hash key: FUNCTION",
+		},
+		{
+			"let x = fn(x, y) { x + y; }; x(1, 2, 3);",
+			"wrong number of arguments. want=2. got=3",
 		},
 	}
 	for _, tt := range tests {
@@ -303,8 +307,8 @@ func TestFunctionApplication(t *testing.T) {
 		{"let double = fn(x) { x * 2; }; double(5);", 10},
 		{"let add = fn(x, y) { x + y; }; add(5, 5);", 10},
 		{"let add = fn(x, y) { x + y; }; add(5 + 5, add(5, 5));", 20},
-		{"fn(x) { x; }(5)", 5},
-		{"let addWrapper = fn () { return fn (x, y) { return x + y }; }; addWrapper ()(1, 2)", 3},
+		{"fn(x) { x; }(5);", 5},
+		{"let addWrapper = fn() { return fn (x, y) { return x + y; }; }; addWrapper()(1, 2);", 3},
 	}
 	for _, tt := range tests {
 		testIntegerObject(t, testEval(tt.input), tt.expected)
@@ -314,7 +318,7 @@ func TestFunctionApplication(t *testing.T) {
 func TestClosures(t *testing.T) {
 	input := `
 	let newAdder = fn(x) {
-	fn(y) { x + y };
+		fn(y) { x + y; };
 	};
 	let addTwo = newAdder(2);
 	addTwo(2);`
@@ -336,7 +340,7 @@ func TestStringLiteral(t *testing.T) {
 }
 
 func TestStringConcatenation(t *testing.T) {
-	input := `"Hello" + " " + "World!"`
+	input := `"Hello" + " " + "World!";`
 
 	evaluated := testEval(input)
 	str, ok := evaluated.(*object.String)
@@ -354,9 +358,9 @@ func TestBuiltinFunctions(t *testing.T) {
 		input    string
 		expected interface{}
 	}{
-		{`len("")`, 0},
-		{`len("four")`, 4},
-		{`len("hello world")`, 11},
+		{`len("");`, 0},
+		{`len("four");`, 4},
+		{`len("hello world");`, 11},
 		{`len(1)`, "argument to `len` not supported, got INTEGER"}, {`len("one", "two")`, "wrong number of arguments. got=2, want=1"},
 	}
 

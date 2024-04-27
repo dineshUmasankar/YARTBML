@@ -1,0 +1,51 @@
+{
+  "name": "yartbml",
+  "displayName": "YARTBML",
+  "description": "YARTBML language support for VSCode",
+  "version": "0.0.1",
+  "publisher": "YBML",
+  "author": {
+    "name": "Dinesh Umasankar",
+    "email": "dinesh71uma@gmail.com"
+  },
+  "icon": "assets/logo.png",
+  "engines": {
+    "vscode": "^1.81.1"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "ybml",
+        "aliases": [
+          "YARTBML",
+          "ybml"
+        ],
+        "extensions": [
+          ".ybml"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ybml",
+        "scopeName": "source.ybml",
+        "path": "./syntaxes/ybml.tmLanguage.json"
+      }
+    ]
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dineshUmasankar/YARTBML/issues",
+    "email": "dinesh71uma@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com:dineshUmasankar/YARTBML.git"
+  },
+  "homepage": "https://github.com/dineshUmasankar/YARTBML/blob/main/README.md",
+  "packageManager": "pnpm@8.14.1+sha256.2df78e65d433d7693b9d3fbdaf431b2d96bb4f96a2ffecd51a50efe16e50a6a8"
+}
