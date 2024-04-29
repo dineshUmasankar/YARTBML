@@ -14,7 +14,7 @@ lang: "en"
 
 # 1 Introduction
 
-YARTBML is a functional programming langauge with a set of basic primitive and complex datatypes. It is a statically typed general purpose language that runs with its own interpreter built in GO. Memory management is handled by GO, and the interpreter is a binary file which was compiled by Go to the specific machine architecture.
+YARTBML is a functional programming language with a set of basic primitive and complex datatypes. It is a statically typed general purpose language that runs with its own interpreter built in GO. Memory management is handled by GO, and the interpreter is a binary file which was compiled by Go to the specific machine architecture.
 
 # 2 Lexical Structure
 This section specifies the lexical structure of the programming language.

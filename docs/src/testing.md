@@ -48,7 +48,7 @@ The testing strategy involves writing comprehensive test cases for each componen
 
 ### AST
 
-- `TestString`: Does the AST produce the expected input sourcecode of YARTBML?
+- `TestString`: Does the AST produce the expected input source code of YARTBML?
 
 ### Evaluator
 
@@ -71,3 +71,10 @@ Open project in IDE of your choosing. In the terminal confirm your working in th
 2. go test ./lexer
 3. go test ./parser
 4. go test ./ast
+
+or test all of our packages by doing with verbose output
+
+```sh
+cd internal
+go test ./... -v
+```
