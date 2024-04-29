@@ -29,6 +29,7 @@ package ast
 
 import (
 	"YARTBML/token"
+	"bytes"
 	"strings"
 )
 
@@ -365,17 +366,17 @@ func (bs *BlockStatement) String() string {
 //		return x;
 //	} else {
 //		return y;
-//	}
+//	};
 //
 // The else is optional and can be left out as shown here
 //
 //	if (x > y) {
 //		return x;
-//	}
+//	};
 //
 // if-else conditionals are expressions, which means they produce a value.
 //
-//	let foobar = if (x > y) { x } else { y };
+//	let foobar = if (x > y) { x; } else { y; };
 //
 // The ThenPath and ElsePath are Block Statements, which are just a series of statements (just like programs).
 type IfExpression struct {
@@ -419,13 +420,13 @@ func (ie *IfExpression) String() string {
 //
 //	fn() {
 //		return foobar + barfoo;
-//	}
+//	};
 //
-//	let myFunction = fn (x, y) { return x + y }
+//	let myFunction = fn (x, y) { return x + y; };
 //
-//	fn () {
+//	fn() {
 //		return fn(x, y) { return x > y; };
-//	}
+//	};
 //
 // As you can see in the examples above, the `myFunction` variable is able to store
 // the function literal as an expression, which can be invoked later by myFunction(x, y).
@@ -470,7 +471,7 @@ func (fl *FunctionLiteral) String() string {
 // Examples: add(2, 3) or add(2 + 2, 3 * 3 * 3)
 // The identifier add returns this function when being evaluated.
 //
-// Another Example is callsFunction(2, 3, fn(x , y) {x + y; });
+// Another Example is callsFunction(2, 3, fn(x , y) {x + y; };);
 // Showcases using function literals as arguments
 type CallExpression struct {
 	Token     token.Token // The '(' token
@@ -503,4 +504,123 @@ func (ce *CallExpression) String() string {
 	sb.WriteString(")")
 
 	return sb.String()
+}
+
+// StringLiteral Node to represent String(s)
+// as an Expression Value-Type in our AST.
+type StringLiteral struct {
+	Token token.Token
+	Value string
+}
+
+// Implementing Expression interface on StringLiteral
+func (sl *StringLiteral) expressionNode() {}
+
+// Implementing Node interface on StringLiteral
+func (sl *StringLiteral) TokenLiteral() string { return sl.Token.Literal }
+
+// String representation of the StringLiteral
+// Implementing Node interface on StringLiteral
+func (sl *StringLiteral) String() string { return sl.Token.Literal }
+
+// ArrayLiteral Node to represent Arrays(s)
+// as an Expression Value-Type in our AST.
+// ex. [1, 2, 3 + 3, fn(x) { x }, add(2, 2)]
+type ArrayLiteral struct {
+	Token    token.Token // the '[' token
+	Elements []Expression
+}
+
+// Implementing Expression interface on ArrayLiteral
+func (al *ArrayLiteral) expressionNode() {}
+
+// Implementing Node interface on ArrayLiteral
+func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
+
+// String representation of the ArrayLiteral
+// Implementing Node interface on ArrayLiteral
+func (al *ArrayLiteral) String() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for _, el := range al.Elements {
+		elements = append(elements, el.String())
+	}
+
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+
+	return out.String()
+}
+
+// Index Operator Expressions
+// ex: myArray[0]; myArray[1]; myArray[2]
+// ex2: [1, 2, 3, 4][2];
+//
+//	  	let myArray = [1, 2, 3, 4];
+//	 	myArray[2];
+//		myArray[2 + 1];
+//		returnsArray()[1];
+//
+// basic structure is <expression>[<expression>]
+type IndexExpression struct {
+	Token token.Token // the [ token
+	Left  Expression
+	Index Expression
+}
+
+// Implementing Expression interface on IndexExpression
+func (ie *IndexExpression) expressionNode() {}
+
+// Implementing Node interface on IndexExpression
+func (ie *IndexExpression) TokenLiteral() string { return ie.Token.Literal }
+
+// String representation of the IndexExpression
+// Implementing Node interface on IndexExpression
+func (ie *IndexExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("(")
+	out.WriteString(ie.Left.String())
+	out.WriteString("[")
+	out.WriteString(ie.Index.String())
+	out.WriteString("])")
+
+	return out.String()
+}
+
+// Basic syntactic structure of Has Literal:
+// {<expression> : <expression>, <expression> : <expression>, ,,,}
+// A comma-separated list of pairs, each pair consisting of two expressions
+// one produces a hash key, the other produces a value.
+// ex: let key = "name";
+//
+//	let hash = {key: {YARTBML"};
+type HashLiteral struct {
+	Token token.Token // the '{' token
+	Pairs map[Expression]Expression
+}
+
+// Implementing Expression interface on HashLiteral
+func (hl *HashLiteral) expressionNode() {}
+
+// Implementing Node interface on HashLiteral
+func (hl *HashLiteral) TokenLiteral() string { return hl.Token.Literal }
+
+// String representation of the HashLiteral
+// Implementing Node interface on HashLiteral
+func (hl *HashLiteral) String() string {
+	var out bytes.Buffer
+
+	pairs := []string{}
+	for key, value := range hl.Pairs {
+		pairs = append(pairs, key.String()+":"+value.String())
+	}
+
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
+
+	return out.String()
 }
