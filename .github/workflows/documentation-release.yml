@@ -46,11 +46,6 @@ jobs:
         with:
           args: --listings --template https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/eisvogel.tex --output=docs/dist/development_environment.pdf "docs/src/development_environment.md"
 
-      - name: DocGen - Project Development Plan Documentation
-        uses: docker://pandoc/extra:latest
-        with:
-          args: --listings --template https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/eisvogel.tex --output=docs/dist/project_development_plan.pdf "docs/src/project_development_plan.md"
-
       - name: DocGen - Language Architecture Document
         uses: docker://pandoc/extra:latest
         with:
