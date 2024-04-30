@@ -25,9 +25,21 @@ In order to get started with YARTBML, ensure you have a Go development environme
 
 [github.com/dineshUmasankar/YARTBML](https://github.com/dineshUmasankar/YARTBML)
 
+To compile our language, run the following commands from the root of our repository to build a final executable for your host machine.
+
+```sh
+cd internal
+go build .
+```
+
 \pagebreak 
 
 ## Language Features
+
+### Semicolons
+
+If C is good enough to have semicolons, then so is our language.
+Every statement must terminate with a semicolon and any expression that returns a value also terminates with a semicolon.
 
 ### Data Types
 
@@ -68,7 +80,24 @@ if (age >= 18) {
    	 puts("Adult");
 } else {
    	 puts("Minor");
-}
+};
+```
+
+### Datatypes in Action
+
+Our arrays are immutable and only get reassigned when a push or pop function's output
+is re-assigned to the original identifier that holds an array.
+
+```
+let arr = [1, 2, 3];
+let arr = push(arr, 4);
+puts(arr);
+```
+
+The same idea applies to our hashmaps as well.
+
+```
+let team = { "name": "Dinesh" };
 ```
 
 \pagebreak 
@@ -92,18 +121,21 @@ puts("Hello, World from YARTBML!");
 We can also implement the Fibonacci sequence to showcase function recursion in YARTBML:
 
 ```
+let results = [];
 let fibonacci = fn(x) {
-  if (x == 0) {
-    0
-  } else {
-    if (x == 1) {
-      return 1;
+    if (x == 0) {
+        return 0;
     } else {
-      fibonacci(x - 1) + fibonacci(x - 2);
-    }
-  }
+        if (x == 1) {
+            return 1;
+        } else {
+            fibonacci(x - 1) + fibonacci(x - 2);
+        };
+    };
 };
-puts(fibonacci(10));
+
+let results = push(results, fibonacci(5));
+puts(results);
 ```
 
 \pagebreak
