@@ -51,6 +51,11 @@ jobs:
         with:
           args: --listings --template https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/eisvogel.tex --output=docs/dist/interpreter_architecture.pdf "docs/src/interpreter_architecture.md"
 
+      - name: DocGen - Post Mortem
+        uses: docker://pandoc/extra:latest
+        with:
+          args: --listings --template https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/eisvogel.tex --output=docs/dist/post_mortem.pdf "docs/src/post_mortem.md"
+
       - name: Upload Generated Documentation Artifacts
         uses: actions/upload-artifact@v4
         with:
