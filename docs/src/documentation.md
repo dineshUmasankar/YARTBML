@@ -83,7 +83,7 @@ YARTBML enriches the Monkey language with a suite of built-in functions designed
 
 ### Examples
 
-Let's demonstrate a simle output in YARTBML: Hello World!
+Let's demonstrate a simple output in YARTBML: Hello World!
 
 ```
 puts("Hello, World from YARTBML!");

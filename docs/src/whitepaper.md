@@ -12,11 +12,10 @@ lang: "en"
 ## Abstract
 
 Inspired by Thorsten Ball's seminal work, "Writing An Interpreter In Go", we aim to extend the foundational concepts introduced by Ball. Our initial intention is to reimplement his base
-language, but draw some inspiration from a few forks that exist out in the wild, such as Tau (module imports, C interoperability, CLI Tool). Moreover, we aim to create a langauge
+language, but draw some inspiration from a few forks that exist out in the wild, such as Tau (module imports, C interoperability, CLI Tool). Moreover, we aim to create a language
 with solid developer experience by attempting to introduce a syntax highlighter (and possible Language Server) within the most common editors such as Neovim, VSCode, and Sublime.
 
-The initial implementation will cover the basis of the SMoL definition, and then extend it with modern developer tooling to help us understand all of the components that make up
-a modern successful languages such as Rust, Go, and Javascript. This document details the design choices, implementation strategies, and technical specifications of our 
+The initial implementation will cover the basis of the SMoL (Standard Model of Languages) definition, and then extend it with modern developer tooling to help us understand all the components that make up a modern successful language such as Rust, Go, and JavaScript. This document details the design choices, implementation strategies, and technical specifications of our 
 interpreter, demonstrating its capabilities and the rationale behind its development.
 
 ## 1. Introduction
@@ -39,7 +38,7 @@ Our interpreter supports several data types, crucial for a wide range of program
 - **Arrays**: To hold collections of values.
 - **Hash Maps**: For key-value pairs storage, enabling complex data structures.
 
-### 2.2 REPL (Read-Eval-Print Loop)
+### 2.2 REPL (Read-Eval-Print-Loop)
 
 A REPL environment is implemented to allow interactive programming and immediate feedback.
 This feature is vital for testing code snippets, debugging, and educational purposes.
@@ -83,7 +82,7 @@ Go's garbage collection and straightforward syntax make it an ideal choice for b
 
 ### 3.2 Parsing and Lexical Analysis
 
-The interpreter uses a hand-written lexer and parser, transforming source code into an abstract syntax tree (AST).
+The interpreter uses a handwritten lexer and parser, transforming source code into an abstract syntax tree (AST).
 This approach provides fine-grained control over syntax and error handling.
 
 ### 3.3 Evaluation Engine
